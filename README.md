@@ -1,6 +1,6 @@
-# 📁 Elaraby Blog // Personal Technical Notes
+# 🚀 Elaraby Blog // Space & Software Engineering Logs
 
-> Japanese detective notebook aesthetic × personal technical blog by **Elaraby**.  
+> Space exploration aesthetic × personal technical blog by **Elaraby**.  
 > Built with **Astro**, **JavaScript**, **Tailwind CSS**, and **MDX**.  
 > Pure static site generation (SSG) with zero backend, zero TypeScript source files, and a fixed left navigation sidebar.
 
@@ -8,12 +8,10 @@
 
 ## 🔍 Features
 
-- **Left Navigation Sidebar:** Desktop fixed sidebar with Elaraby's cartoon detective avatar, quick search palette, navigation menu, theme toggle, and drawer on mobile screens.
-- **No Footer Clutter:** Clean, distraction-free reading experience without unnecessary footer blocks.
-- **Editorial Aesthetic:** Japanese investigation notebook vibes, red Hanko seals (`朱色`), washi grid paper background, and Tokyo midnight palette.
-- **Custom Detective Cartoon Avatar:** Stylized cartoon detective portrait of Elaraby (`public/images/elaraby.jpg`).
-- **Pure JavaScript & MDX:** No TypeScript source files. Writing a new article is as simple as creating a `.mdx` file.
-- **Case Docket TOC & Syntax Highlighting:** Sticky table of contents with scroll spy, Shiki syntax themes (GitHub Light / Tokyo Night), copy buttons, and language headers.
+- **Left Navigation Sidebar:** Desktop fixed sidebar with Elaraby's circular avatar, quick mission search palette (`⌘K`), navigation menu, theme toggle, and drawer on mobile screens.
+- **Cosmos & Space Exploration Narrative:** Mission flight logs, telemetry sectors, star charts, and orbit metrics without changing the warm paper / deep navy color palette.
+- **Pure JavaScript & MDX:** Writing a new article is as simple as creating a `.mdx` file.
+- **Flight Plan TOC & High-Contrast Code Blocks:** Sticky table of contents with scroll spy, GitHub Light / GitHub Dark syntax themes, and copy buttons.
 - **Local Static Search:** Fast, zero-database search modal (`⌘K` or `/` shortcut) indexing titles, summaries, categories, and tags.
 - **Zero-Flash Theme Toggle:** Supports Light, Dark, and System preference with instant script initialization and `localStorage` persistence.
 - **GitHub Pages Ready:** Built-in subpath normalization and automated CI/CD workflow in `.github/workflows/deploy.yml`.
@@ -57,17 +55,18 @@ Create a `.mdx` file inside `src/content/blog/`:
 
 ```mdx
 ---
-title: "Investigating Memory Leaks in V8 Engine"
-description: "A forensic analysis of heap snapshots, retained closures, and garbage collection behavior."
-pubDate: 2026-10-01
-category: "Backend"
+title: "Building an AI Service Layer in Express.js with Gemini API"
+description: "A complete architectural blueprint for designing a resilient, production-grade AI service layer in Express.js using Google Gemini API."
+pubDate: 2026-09-24
+category: "Software Engineering"
 tags:
+  - Express.js
+  - Gemini API
+  - AI
   - Node.js
-  - V8
-  - Performance
-  - Debugging
-caseNumber: "CASE #031"
-featured: false
+  - Software Engineering
+caseNumber: "MISSION #001"
+featured: true
 ---
 
 Your technical article content in Markdown or MDX here...

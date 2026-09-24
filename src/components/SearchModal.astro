@@ -48,15 +48,15 @@ const searchIndexUrl = resolvePath('search-index.json');
     <div id="search-results-list" class="max-h-96 overflow-y-auto p-3 space-y-2">
       <div id="search-placeholder" class="py-10 text-center text-sm text-sumi-muted dark:text-nightText-muted">
         <p class="font-mono text-xs uppercase tracking-wider text-hanko dark:text-hanko-light mb-1">
-          // ARCHIVE QUERY
+          // ORBIT QUERY
         </p>
-        <p>Type keywords to search across all case files...</p>
+        <p>Type keywords to search across all mission logs...</p>
       </div>
       <div id="search-empty-state" class="py-10 text-center text-sm text-sumi-muted dark:text-nightText-muted hidden">
         <p class="font-mono text-xs uppercase tracking-wider text-hanko dark:text-hanko-light mb-1">
-          // NO MATCHING CASES
+          // NO MATCHING TRANSMISSIONS
         </p>
-        <p>No investigation records matched your search query.</p>
+        <p>No orbital records matched your search query.</p>
       </div>
     </div>
 
@@ -147,7 +147,7 @@ const searchIndexUrl = resolvePath('search-index.json');
 
       a.innerHTML = `
         <div class="flex items-center justify-between text-xs font-mono text-sumi-muted dark:text-nightText-muted mb-1">
-          <span class="text-hanko dark:text-hanko-light font-semibold">${item.caseNumber || 'CASE FILE'}</span>
+          <span class="text-hanko dark:text-hanko-light font-semibold">${item.caseNumber || 'MISSION LOG'}</span>
           <span>${item.category} · ${item.date}</span>
         </div>
         <div class="font-semibold text-sumi dark:text-nightText text-sm mb-1">${item.title}</div>

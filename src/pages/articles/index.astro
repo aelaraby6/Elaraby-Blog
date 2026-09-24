@@ -10,20 +10,20 @@ const tags = getAllTags(posts);
 ---
 
 <BaseLayout
-  title="Case Archive // All Articles"
-  description="Comprehensive archive of all technical articles, engineering notes, and case investigations."
+  title="Flight Archive // All Mission Logs"
+  description="Comprehensive archive of all technical articles, engineering flight logs, and AI architecture notes."
 >
   <!-- Page Header -->
   <div class="mb-8 pb-6 border-b border-paper-border dark:border-night-border">
     <div class="flex items-center gap-2 mb-2">
-      <DetectiveStamp text="MASTER FILE" size="sm" />
-      <span class="text-xs font-mono text-sumi-muted dark:text-nightText-muted">COMPLETE CATALOG</span>
+      <DetectiveStamp text="FLIGHT CATALOG" size="sm" />
+      <span class="text-xs font-mono text-sumi-muted dark:text-nightText-muted">COMPLETE ARCHIVE</span>
     </div>
     <h1 class="text-2xl sm:text-3xl font-extrabold text-sumi dark:text-nightText tracking-tight mb-2">
-      Case Archive & Articles
+      Mission Archive & Flight Logs
     </h1>
     <p class="text-sm text-sumi-soft dark:text-nightText-soft font-serif max-w-xl">
-      All technical explorations, architectural notes, and investigation logs recorded in chronological order.
+      All technical expeditions, architectural blueprints, and engineering notes recorded in chronological order.
     </p>
   </div>
 
@@ -44,7 +44,7 @@ const tags = getAllTags(posts);
       <input
         id="articles-search-input"
         type="text"
-        placeholder="Filter articles by title, keywords, or summary..."
+        placeholder="Filter logs by title, keywords, or summary..."
         class="w-full pl-10 pr-4 py-2 text-xs sm:text-sm font-mono rounded-lg border border-paper-border dark:border-night-border bg-paper dark:bg-night text-sumi dark:text-nightText focus:outline-none focus:ring-2 focus:ring-hanko/30 placeholder-sumi-muted dark:placeholder-nightText-muted"
         autocomplete="off"
       />
@@ -54,7 +54,7 @@ const tags = getAllTags(posts);
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
       <!-- Category Filter Pills -->
       <div class="flex items-center gap-1.5 flex-wrap">
-        <span class="text-sumi-muted dark:text-nightText-muted mr-1">Category:</span>
+        <span class="text-sumi-muted dark:text-nightText-muted mr-1">Sector:</span>
         <button
           type="button"
           class="cat-filter-btn px-2.5 py-1 rounded text-xs transition-colors bg-hanko text-white dark:bg-hanko-light dark:text-night font-semibold"
@@ -76,7 +76,7 @@ const tags = getAllTags(posts);
       <!-- Tag Filter Dropdown or Quick Reset -->
       <div class="flex items-center justify-between sm:justify-end gap-2">
         <span id="filtered-count" class="text-xs text-sumi-muted dark:text-nightText-muted">
-          Showing {posts.length} of {posts.length} cases
+          Showing {posts.length} of {posts.length} missions
         </span>
         <button
           id="clear-filter-btn"
@@ -110,9 +110,9 @@ const tags = getAllTags(posts);
 
   <!-- Empty Search Results Placeholder -->
   <div id="no-articles-found" class="hidden py-16 text-center rounded-xl border border-dashed border-paper-border dark:border-night-border bg-paper-elevated/50 dark:bg-night-surface/50">
-    <DetectiveStamp text="NOT FOUND" size="md" variant="classified" className="mb-3" />
-    <p class="font-mono text-sm font-semibold text-sumi dark:text-nightText mb-1">No matching case files found.</p>
-    <p class="text-xs text-sumi-muted dark:text-nightText-muted font-mono">Try adjusting your search terms or category filter.</p>
+    <DetectiveStamp text="SIGNAL LOST" size="md" variant="classified" className="mb-3" />
+    <p class="font-mono text-sm font-semibold text-sumi dark:text-nightText mb-1">No matching flight logs found.</p>
+    <p class="text-xs text-sumi-muted dark:text-nightText-muted font-mono">Try adjusting your search query or sector filters.</p>
   </div>
 </BaseLayout>
 
@@ -149,7 +149,7 @@ const tags = getAllTags(posts);
 
       // Update count & empty state
       if (countDisplay) {
-        countDisplay.textContent = `Showing ${visibleCount} of ${totalCount} cases`;
+        countDisplay.textContent = `Showing ${visibleCount} of ${totalCount} missions`;
       }
 
       if (emptyNotice) {

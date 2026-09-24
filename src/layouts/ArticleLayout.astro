@@ -16,7 +16,7 @@ const {
   updatedDate,
   category,
   tags = [],
-  caseNumber = 'CASE FILE',
+  caseNumber = 'MISSION #001',
   coverImage,
 } = data;
 
@@ -40,22 +40,22 @@ const articlesUrl = resolvePath('articles');
       <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
       </svg>
-      <span>Return to Case Archive</span>
+      <span>Return to Mission Archive</span>
     </a>
 
     <div class="flex items-center gap-2">
-      <span class="hidden sm:inline">SECURITY LEVEL: UNRESTRICTED</span>
-      <DetectiveStamp text="RECORD" size="sm" />
+      <span class="hidden sm:inline">ORBIT TELEMETRY // UNRESTRICTED</span>
+      <DetectiveStamp text="FLIGHT LOG" size="sm" />
     </div>
   </div>
 
   <article class="w-full">
-    <!-- Header Case Dossier -->
+    <!-- Header Mission Dossier -->
     <header class="p-6 sm:p-8 rounded-2xl border border-paper-border dark:border-night-border bg-paper-elevated dark:bg-night-surface shadow-xs mb-10 relative overflow-hidden">
-      <!-- Subtle top decorative strip -->
+      <!-- Top decorative strip -->
       <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-hanko via-aizome to-detective-teal"></div>
 
-      <!-- Case Number & Category -->
+      <!-- Mission Number & Category -->
       <div class="flex items-center justify-between gap-3 flex-wrap mb-4">
         <div class="flex items-center gap-2.5">
           <span class="px-2 py-0.5 rounded text-xs font-mono font-bold tracking-wider text-hanko dark:text-hanko-light bg-hanko/10 dark:bg-hanko-light/10 border border-hanko/30 dark:border-hanko-light/30">
@@ -74,7 +74,7 @@ const articlesUrl = resolvePath('articles');
         {title}
       </h1>
 
-      <!-- Case Summary / Subtitle -->
+      <!-- Mission Summary -->
       <p class="text-base sm:text-lg text-sumi-soft dark:text-nightText-soft leading-relaxed mb-6 font-serif">
         {description}
       </p>
@@ -83,7 +83,7 @@ const articlesUrl = resolvePath('articles');
       <div class="flex items-center justify-between gap-4 pt-4 border-t border-paper-border/60 dark:border-night-border/60 flex-wrap text-xs font-mono text-sumi-muted dark:text-nightText-muted">
         <div class="flex items-center gap-3 flex-wrap">
           <div>
-            <span class="text-sumi-faint dark:text-nightText-faint uppercase mr-1">Filed:</span>
+            <span class="text-sumi-faint dark:text-nightText-faint uppercase mr-1">Launched:</span>
             <time datetime={pubDate.toISOString()}>{formattedPubDate}</time>
           </div>
 
@@ -121,7 +121,7 @@ const articlesUrl = resolvePath('articles');
               <summary class="font-bold cursor-pointer text-sumi dark:text-nightText flex items-center justify-between select-none">
                 <span class="flex items-center gap-2">
                   <span class="text-hanko dark:text-hanko-light">§</span>
-                  <span>TABLE OF CONTENTS // CASE OUTLINE</span>
+                  <span>TABLE OF CONTENTS // FLIGHT PLAN</span>
                 </span>
                 <span class="text-sumi-muted dark:text-nightText-muted group-open:rotate-180 transition-transform">▼</span>
               </summary>
@@ -137,14 +137,14 @@ const articlesUrl = resolvePath('articles');
           <slot />
         </div>
 
-        <!-- Case Closed Footer Seal & Tags -->
+        <!-- Mission Accomplished Footer Seal & Tags -->
         <div class="mt-14 pt-8 border-t border-dashed border-paper-border dark:border-night-border">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-xl bg-paper-muted/60 dark:bg-night-surface border border-paper-border dark:border-night-border">
             <div class="flex items-center gap-3">
-              <DetectiveStamp text="CASE CLOSED" size="md" variant="hanko" />
+              <DetectiveStamp text="MISSION COMPLETE" size="md" variant="hanko" />
               <div>
-                <p class="text-xs font-mono font-semibold text-sumi dark:text-nightText">Case findings recorded & archived.</p>
-                <p class="text-[11px] font-mono text-sumi-muted dark:text-nightText-muted">Questions or discoveries? Verify in your local environment.</p>
+                <p class="text-xs font-mono font-semibold text-sumi dark:text-nightText">Flight telemetry recorded & stabilized.</p>
+                <p class="text-[11px] font-mono text-sumi-muted dark:text-nightText-muted">Simulate and verify in your local runtime environment.</p>
               </div>
             </div>
 
@@ -156,14 +156,14 @@ const articlesUrl = resolvePath('articles');
               <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
               </svg>
-              <span>Back to Top</span>
+              <span>Return to Top</span>
             </button>
           </div>
         </div>
 
-        <!-- Article Pagination (Previous / Next Case) -->
+        <!-- Article Pagination (Previous / Next Mission) -->
         {(prevPost || nextPost) && (
-          <nav class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs" aria-label="Previous and Next Articles">
+          <nav class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs" aria-label="Previous and Next Missions">
             {prevPost ? (
               <a
                 href={resolvePath(`articles/${prevPost.slug}`)}
@@ -173,7 +173,7 @@ const articlesUrl = resolvePath('articles');
                   <svg class="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                   </svg>
-                  <span>PREVIOUS CASE</span>
+                  <span>PREVIOUS MISSION</span>
                 </div>
                 <div class="font-bold text-sumi dark:text-nightText text-sm group-hover:text-hanko dark:group-hover:text-hanko-light transition-colors line-clamp-2">
                   {prevPost.data.title}
@@ -189,7 +189,7 @@ const articlesUrl = resolvePath('articles');
                 class="group p-4 rounded-xl border border-paper-border dark:border-night-border bg-paper-elevated dark:bg-night-surface hover:border-hanko/40 dark:hover:border-hanko-light/40 transition-colors flex flex-col justify-between text-right"
               >
                 <div class="flex items-center justify-end gap-1 text-sumi-muted dark:text-nightText-muted mb-1">
-                  <span>NEXT CASE</span>
+                  <span>NEXT MISSION</span>
                   <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
@@ -208,23 +208,23 @@ const articlesUrl = resolvePath('articles');
         <div class="sticky top-24 space-y-6">
           <TableOfContents headings={headings} />
 
-          <!-- Detective Investigation Specs Widget -->
+          <!-- Space Mission Specs Widget -->
           <div class="p-4 rounded-xl border border-paper-border dark:border-night-border bg-paper-elevated/50 dark:bg-night-surface/50 text-xs font-mono text-sumi-muted dark:text-nightText-muted space-y-2">
             <div class="text-sumi dark:text-nightText font-semibold flex items-center justify-between pb-1 border-b border-paper-border dark:border-night-border">
-              <span>CASE METRICS</span>
+              <span>MISSION METRICS</span>
               <span class="text-[10px] text-hanko dark:text-hanko-light">{caseNumber}</span>
             </div>
             <div class="flex justify-between py-0.5">
-              <span>Category</span>
+              <span>Sector</span>
               <span class="text-sumi dark:text-nightText font-medium">{category}</span>
             </div>
             <div class="flex justify-between py-0.5">
-              <span>Read Time</span>
+              <span>Duration</span>
               <span class="text-sumi dark:text-nightText font-medium">{readingTime}</span>
             </div>
             <div class="flex justify-between py-0.5">
-              <span>Status</span>
-              <span class="text-detective-teal font-medium">Archived</span>
+              <span>Orbit Status</span>
+              <span class="text-detective-teal font-medium">Stabilized</span>
             </div>
           </div>
         </div>

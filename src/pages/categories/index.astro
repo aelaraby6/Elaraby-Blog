@@ -10,19 +10,19 @@ const categories = getAllCategories(posts);
 ---
 
 <BaseLayout
-  title="Categories // Investigation Topics"
-  description="Explore technical case notes by domain: Backend, AI, Cybersecurity, Networking, and more."
+  title="Engineering Sectors // Categories"
+  description="Explore technical flight logs by engineering sector: Software Engineering, AI, and Systems Architecture."
 >
   <div class="mb-10 pb-6 border-b border-paper-border dark:border-night-border">
     <div class="flex items-center gap-2 mb-2">
-      <DetectiveStamp text="INDEX CLASSIFICATION" size="sm" />
+      <DetectiveStamp text="SECTOR CLASSIFICATION" size="sm" />
       <span class="text-xs font-mono text-sumi-muted dark:text-nightText-muted">TAXONOMY</span>
     </div>
     <h1 class="text-2xl sm:text-3xl font-extrabold text-sumi dark:text-nightText tracking-tight mb-2">
-      Categories & Investigation Topics
+      Engineering Sectors & Disciplines
     </h1>
     <p class="text-sm text-sumi-soft dark:text-nightText-soft font-serif max-w-xl">
-      Browse articles organized into core software engineering disciplines and research areas.
+      Browse articles and telemetry organized into core software engineering disciplines and research tracks.
     </p>
   </div>
 
@@ -38,7 +38,7 @@ const categories = getAllCategories(posts);
               {cat.name}
             </span>
             <span class="text-xs font-mono px-2 py-0.5 rounded bg-hanko/5 dark:bg-hanko-light/10 text-hanko dark:text-hanko-light border border-hanko/20 dark:border-hanko-light/20 font-bold">
-              {cat.count} {cat.count === 1 ? 'case' : 'cases'}
+              {cat.count} {cat.count === 1 ? 'mission' : 'missions'}
             </span>
           </div>
           <p class="text-xs sm:text-sm text-sumi-muted dark:text-nightText-muted leading-relaxed font-sans mb-4">
@@ -47,7 +47,7 @@ const categories = getAllCategories(posts);
         </div>
 
         <div class="pt-3 border-t border-paper-border/60 dark:border-night-border/60 flex items-center justify-between text-xs font-mono text-hanko dark:text-hanko-light">
-          <span>Open Category Archive</span>
+          <span>Open Sector Archive</span>
           <span class="group-hover:translate-x-1 transition-transform">→</span>
         </div>
       </a>

@@ -9,7 +9,7 @@ export async function GET() {
     description: post.data.description,
     category: post.data.category,
     tags: post.data.tags || [],
-    caseNumber: post.data.caseNumber || 'CASE FILE',
+    caseNumber: post.data.caseNumber || 'MISSION LOG',
     date: formatDate(post.data.pubDate),
     slug: post.slug,
     url: resolvePath(`articles/${post.slug}`),
