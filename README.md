@@ -1,6 +1,6 @@
 # Elaraby Blog
 
-Personal technical blog by Elaraby. A static space for writing engineering notes, architectural patterns, backend designs, and AI integration workflows.
+Personal technical blog. A static space for writing engineering notes, architectural patterns, backend designs, and AI integration workflows.
 
 Built with Astro, JavaScript, Tailwind CSS, and MDX.
 
