@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import DetectiveStamp from '../components/DetectiveStamp.astro';
 import { resolvePath } from '../utils/paths.js';
 
 const homeUrl = resolvePath('');
@@ -12,9 +11,10 @@ const articlesUrl = resolvePath('articles');
   description="The requested flight log could not be located in this orbital sector."
 >
   <div class="py-16 sm:py-24 max-w-lg mx-auto text-center space-y-6">
-    <!-- Red Hanko Stamp -->
     <div class="flex justify-center">
-      <DetectiveStamp text="SIGNAL LOST" size="lg" variant="hanko" />
+      <div class="px-3.5 py-1.5 rounded-full border border-hanko/40 dark:border-hanko-light/40 bg-hanko/10 dark:bg-hanko-light/10 text-hanko dark:text-hanko-light font-mono text-xs font-bold tracking-wider uppercase">
+        SIGNAL LOST // ORBIT 404
+      </div>
     </div>
 
     <!-- Error Title -->

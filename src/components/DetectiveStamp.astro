@@ -1,29 +1,31 @@
 ---
 const {
-  text = 'CASE RECORD',
-  subtext = '',
-  size = 'md',
-  variant = 'hanko',
+  text = 'MISSION LOG',
+  subtext,
+  size = 'sm',
+  variant = 'default',
   className = '',
 } = Astro.props;
 
-const sizeClasses = {
-  sm: 'text-[10px] px-1.5 py-0.5 border',
-  md: 'text-xs px-2.5 py-1 border-[1.5px]',
-  lg: 'text-sm px-3.5 py-1.5 border-2',
+const sizeStyles = {
+  xs: 'text-[9px] px-2 py-0.5',
+  sm: 'text-[10px] px-2.5 py-1',
+  md: 'text-xs px-3.5 py-1.5',
+  lg: 'text-sm px-4 py-2 font-bold',
 };
 
-const variantClasses = {
-  hanko: 'border-hanko text-hanko dark:border-hanko-light dark:text-hanko-light bg-hanko/5 dark:bg-hanko-light/10',
-  verified: 'border-detective-teal text-detective-teal bg-detective-teal/5',
-  classified: 'border-detective-amber text-detective-amber bg-detective-amber/5',
+const variantStyles = {
+  default: 'border-hanko/30 bg-hanko/10 text-hanko dark:border-hanko-light/30 dark:bg-hanko-light/10 dark:text-hanko-light',
+  hanko: 'border-hanko bg-hanko/10 text-hanko dark:border-hanko-light dark:bg-hanko-light/10 dark:text-hanko-light font-bold',
+  verified: 'border-detective-teal/30 bg-detective-teal/10 text-detective-teal dark:border-detective-teal/40 dark:bg-detective-teal/10 dark:text-detective-teal',
+  classified: 'border-sumi-muted/30 bg-sumi-muted/10 text-sumi-muted dark:border-nightText-muted/30 dark:bg-nightText-muted/10 dark:text-nightText-muted',
 };
 ---
 
 <span
-  class={`inline-flex flex-col items-center justify-center font-mono font-bold uppercase tracking-wider rounded-sm select-none transform -rotate-2 ${sizeClasses[size] || sizeClasses.md} ${variantClasses[variant] || variantClasses.hanko} ${className}`}
-  aria-label={subtext ? `${text} ${subtext}` : text}
+  class={`inline-flex items-center gap-1.5 rounded-full border font-mono uppercase tracking-wider ${sizeStyles[size] || sizeStyles.sm} ${variantStyles[variant] || variantStyles.default} ${className}`}
 >
-  <span class="leading-none">{text}</span>
-  {subtext && <span class="text-[8px] tracking-normal font-mono opacity-85 mt-0.5">{subtext}</span>}
+  <span class="w-1.5 h-1.5 rounded-full bg-current opacity-70"></span>
+  <span>{text}</span>
+  {subtext && <span class="opacity-60 text-[85%]">· {subtext}</span>}
 </span>

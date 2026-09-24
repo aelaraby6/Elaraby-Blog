@@ -1,79 +1,76 @@
-# 🚀 Elaraby Blog // Space & Software Engineering Logs
+# Elaraby Blog
 
-> Space exploration aesthetic × personal technical blog by **Elaraby**.  
-> Built with **Astro**, **JavaScript**, **Tailwind CSS**, and **MDX**.  
-> Pure static site generation (SSG) with zero backend, zero TypeScript source files, and a fixed left navigation sidebar.
+Personal technical blog by Elaraby. A static space for writing engineering notes, architectural patterns, backend designs, and AI integration workflows.
 
----
+Built with Astro, JavaScript, Tailwind CSS, and MDX.
 
-## 🔍 Features
+## Features
 
-- **Left Navigation Sidebar:** Desktop fixed sidebar with Elaraby's circular avatar, quick mission search palette (`⌘K`), navigation menu, theme toggle, and drawer on mobile screens.
-- **Cosmos & Space Exploration Narrative:** Mission flight logs, telemetry sectors, star charts, and orbit metrics without changing the warm paper / deep navy color palette.
-- **Pure JavaScript & MDX:** Writing a new article is as simple as creating a `.mdx` file.
-- **Flight Plan TOC & High-Contrast Code Blocks:** Sticky table of contents with scroll spy, GitHub Light / GitHub Dark syntax themes, and copy buttons.
-- **Local Static Search:** Fast, zero-database search modal (`⌘K` or `/` shortcut) indexing titles, summaries, categories, and tags.
-- **Zero-Flash Theme Toggle:** Supports Light, Dark, and System preference with instant script initialization and `localStorage` persistence.
-- **GitHub Pages Ready:** Built-in subpath normalization and automated CI/CD workflow in `.github/workflows/deploy.yml`.
-- **SEO & Feeds:** Full Open Graph / Twitter cards, automatic XML sitemap, and RSS 2.0 feed (`/rss.xml`).
+- Fixed navigation sidebar with search palette and theme toggle
+- Pure JavaScript and MDX (zero TypeScript configuration)
+- High-contrast syntax highlighting with copy buttons
+- Client-side static search modal (Cmd/Ctrl + K)
+- Full static generation (SSG) with automated GitHub Pages deployment
+- Automatic RSS feed and XML sitemap generation
 
----
+## Tech Stack
 
-## 🚀 Quick Start
+- Framework: Astro (SSG)
+- Language: JavaScript (ESM)
+- Styling: Tailwind CSS
+- Content: MDX & Astro Content Collections
 
-### 1. Installation
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18.14.1 or higher
+- npm
+
+### Installation
 
 ```bash
-# Clone repository
-git clone https://github.com/username/elaraby-blog.git
-cd elaraby-blog
-
-# Install dependencies
+git clone https://github.com/aelaraby6/Elaraby-Blog.git
+cd Elaraby-Blog
 npm install
 ```
 
-### 2. Development
+### Development
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:4321](http://localhost:4321) in your browser.
+The local development server runs at `http://localhost:4321`.
 
-### 3. Production Build & Preview
+### Production Build
 
 ```bash
 npm run build
 npm run preview
 ```
 
----
+Static output is generated in the `dist/` directory.
 
-## ✍️ Creating New Articles
+## Writing Articles
 
-Create a `.mdx` file inside `src/content/blog/`:
+Add a `.mdx` file to `src/content/blog/`:
 
 ```mdx
 ---
-title: "Building an AI Service Layer in Express.js with Gemini API"
-description: "A complete architectural blueprint for designing a resilient, production-grade AI service layer in Express.js using Google Gemini API."
+title: "Article Title"
+description: "Brief summary of the article."
 pubDate: 2026-09-24
 category: "Software Engineering"
 tags:
-  - Express.js
-  - Gemini API
-  - AI
+  - Architecture
   - Node.js
-  - Software Engineering
-caseNumber: "MISSION #001"
 featured: true
 ---
 
-Your technical article content in Markdown or MDX here...
+Your content in Markdown or MDX here...
 ```
 
----
+## License
 
-## ⚖️ License
-
-MIT License. Created by Elaraby.
+MIT License
