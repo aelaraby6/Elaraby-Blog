@@ -1,4 +1,4 @@
-name: Deploy Case Notes Blog to GitHub Pages
+name: Deploy Elaraby Blog to GitHub Pages
 
 on:
   push:
@@ -33,13 +33,15 @@ jobs:
 
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Build with Astro
         run: npm run build
         env:
-          ASTRO_SITE: ${{ steps.pages.outputs.origin }}
-          ASTRO_BASE: ${{ steps.pages.outputs.base_path }}
+          ASTRO_SITE: ${{ steps.pages.outputs.origin || format('https://{0}.github.io', github.repository_owner) }}
+          ASTRO_BASE: ${{ steps.pages.outputs.base_path || format('/{0}', github.event.repository.name) }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
@@ -57,3 +59,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
