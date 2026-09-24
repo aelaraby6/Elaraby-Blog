@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import DetectiveStamp from '../../components/DetectiveStamp.astro';
+import { getPublishedPosts, getAllTags, slugify } from '../../utils/blog.js';
+import { resolvePath } from '../../utils/paths.js';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  const tags = getAllTags(posts);
+
+  return tags.map((tag) => {
+    const tagPosts = posts.filter((post) => {
+      const postTags = post.data.tags || [];
+      return postTags.some((t) => slugify(t) === tag.slug);
+    });
+
+    return {
+      params: { tag: tag.slug },
+      props: { tag, posts: tagPosts },
+    };
+  });
+}
+
+const { tag, posts } = Astro.props;
+const tagsUrl = resolvePath('tags');
+---
+
+<BaseLayout
+  title={`Tag: #${tag.name}`}
+  description={`All technical case notes and articles tagged with #${tag.name}.`}
+>
+  <div class="mb-8 pb-6 border-b border-paper-border dark:border-night-border">
+    <div class="mb-4">
+      <a
+        href={tagsUrl}
+        class="inline-flex items-center gap-1 text-xs font-mono text-sumi-muted dark:text-nightText-muted hover:text-hanko dark:hover:text-hanko-light transition-colors"
+      >
+        ← Return to all tags
+      </a>
+    </div>
+
+    <div class="flex items-center gap-2 mb-2">
+      <DetectiveStamp text="TAGGED CASE" subtext={`#${tag.name}`} size="sm" />
+      <span class="text-xs font-mono text-sumi-muted dark:text-nightText-muted">{posts.length} {posts.length === 1 ? 'case file' : 'case files'}</span>
+    </div>
+
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-sumi dark:text-nightText tracking-tight mb-2">
+      Tag: <span class="text-hanko dark:text-hanko-light">#{tag.name}</span>
+    </h1>
+
+    <p class="text-sm text-sumi-soft dark:text-nightText-soft font-serif max-w-xl">
+      Technical articles cross-referenced with #{tag.name}.
+    </p>
+  </div>
+
+  <div class="space-y-4">
+    {posts.map((post) => (
+      <ArticleCard post={post} />
+    ))}
+  </div>
+</BaseLayout>

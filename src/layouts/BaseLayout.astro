@@ -1,0 +1,39 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Sidebar from '../components/Sidebar.astro';
+import SearchModal from '../components/SearchModal.astro';
+import CodeCopyScript from '../components/CodeCopyScript.astro';
+import '../styles/global.css';
+
+const {
+  title = 'Elaraby Blog // Technical Notes & Case Files',
+  description = 'Personal technical blog by Elaraby. Exploring backend engineering, AI heuristics, cybersecurity investigations, and software discoveries.',
+  image,
+  articleDate,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <BaseHead
+      title={title}
+      description={description}
+      image={image}
+      articleDate={articleDate}
+    />
+  </head>
+  <body class="min-h-full flex flex-col font-sans antialiased text-sumi dark:text-nightText bg-paper dark:bg-night selection:bg-hanko/20 dark:selection:bg-hanko-light/30">
+    <Sidebar />
+
+    <!-- Main Content Area offset by Sidebar width on desktop -->
+    <div class="lg:pl-72 flex-1 flex flex-col min-w-0">
+      <main class="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-8 py-8 sm:py-12">
+        <slot />
+      </main>
+    </div>
+
+    <SearchModal />
+    <CodeCopyScript />
+  </body>
+</html>

@@ -1,0 +1,61 @@
+---
+import { resolvePath } from '../utils/paths.js';
+import DetectiveStamp from './DetectiveStamp.astro';
+
+const rssUrl = resolvePath('rss.xml');
+const homeUrl = resolvePath('');
+const articlesUrl = resolvePath('articles');
+const categoriesUrl = resolvePath('categories');
+const aboutUrl = resolvePath('about');
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="mt-auto border-t border-paper-border dark:border-night-border bg-paper-muted/50 dark:bg-night-surface/50 text-xs font-mono transition-colors">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-6 pb-8 border-b border-paper-border/60 dark:border-night-border/60">
+      <!-- Left brand & motto -->
+      <div class="flex flex-col items-center sm:items-start text-center sm:text-left gap-1.5">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-sumi dark:text-nightText text-sm tracking-tight">CASE NOTES</span>
+          <DetectiveStamp text="RECORD" subtext="記録" size="sm" />
+        </div>
+        <p class="text-sumi-muted dark:text-nightText-muted text-xs">
+          A personal corner of the internet for technical articles, learning notes & software investigations.
+        </p>
+        <p class="text-[11px] text-sumi-faint dark:text-nightText-faint italic font-serif">
+          "Truth in every line of code · 真実はコードの中に"
+        </p>
+      </div>
+
+      <!-- Quick Nav Links & Feeds -->
+      <div class="flex items-center gap-4 flex-wrap justify-center sm:justify-end text-sumi-soft dark:text-nightText-soft">
+        <a href={homeUrl} class="hover:text-hanko dark:hover:text-hanko-light transition-colors">Home</a>
+        <span>·</span>
+        <a href={articlesUrl} class="hover:text-hanko dark:hover:text-hanko-light transition-colors">Articles</a>
+        <span>·</span>
+        <a href={categoriesUrl} class="hover:text-hanko dark:hover:text-hanko-light transition-colors">Categories</a>
+        <span>·</span>
+        <a href={aboutUrl} class="hover:text-hanko dark:hover:text-hanko-light transition-colors">About</a>
+        <span>·</span>
+        <a href={rssUrl} class="flex items-center gap-1 hover:text-hanko dark:hover:text-hanko-light transition-colors" aria-label="RSS Feed">
+          <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 11-2 0 1 1 0 012 0z" />
+          </svg>
+          <span>RSS</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Bottom colophon -->
+    <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sumi-muted dark:text-nightText-muted text-[11px]">
+      <div>
+        © {currentYear} Case Notes · Built with Astro, Tailwind CSS & JavaScript
+      </div>
+      <div class="flex items-center gap-3">
+        <span>Static Generation</span>
+        <span>·</span>
+        <span>GitHub Pages Ready</span>
+      </div>
+    </div>
+  </div>
+</footer>

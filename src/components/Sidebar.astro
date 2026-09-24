@@ -1,0 +1,255 @@
+---
+import { resolvePath } from '../utils/paths.js';
+import ThemeToggle from './ThemeToggle.astro';
+
+const currentPath = Astro.url.pathname;
+const homeUrl = resolvePath('');
+const articlesUrl = resolvePath('articles');
+const categoriesUrl = resolvePath('categories');
+const rssUrl = resolvePath('rss.xml');
+const avatarUrl = resolvePath('images/elaraby.jpg');
+
+function isActive(path) {
+  const normalizedCurrent = currentPath.endsWith('/') && currentPath !== '/' ? currentPath.slice(0, -1) : currentPath;
+  const normalizedTarget = path.endsWith('/') && path !== '/' ? path.slice(0, -1) : path;
+  if (normalizedTarget === homeUrl) {
+    return normalizedCurrent === homeUrl;
+  }
+  return normalizedCurrent.startsWith(normalizedTarget);
+}
+---
+
+<!-- Mobile Top Header Bar (Visible on < lg screens) -->
+<header class="lg:hidden sticky top-0 z-40 w-full border-b border-paper-border/80 dark:border-night-border/80 bg-paper/95 dark:bg-night/95 backdrop-blur-md px-4 py-3 flex items-center justify-between">
+  <a href={homeUrl} class="flex items-center gap-2.5 focus:outline-none">
+    <div class="w-9 h-9 rounded-full overflow-hidden border border-paper-border dark:border-night-border shadow-xs">
+      <img src={avatarUrl} alt="Elaraby" class="w-full h-full object-cover" />
+    </div>
+    <div class="flex flex-col">
+      <span class="font-mono text-sm font-bold text-sumi dark:text-nightText tracking-tight">
+        Elaraby Blog
+      </span>
+      <span class="text-[9px] font-mono text-sumi-muted dark:text-nightText-muted tracking-wider uppercase -mt-0.5">
+        ORBIT LOG // TELEMETRY
+      </span>
+    </div>
+  </a>
+
+  <div class="flex items-center gap-2">
+    <!-- Search Button Mobile -->
+    <button
+      type="button"
+      onclick="window.openSearchModal ? window.openSearchModal() : null"
+      class="p-2 rounded-md border border-paper-border dark:border-night-border bg-paper-elevated dark:bg-night-card text-sumi-muted dark:text-nightText-muted hover:text-hanko dark:hover:text-hanko-light text-xs font-mono focus:outline-none"
+      aria-label="Open mission search"
+    >
+      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </button>
+
+    <ThemeToggle />
+
+    <!-- Mobile Menu Hamburger Button -->
+    <button
+      id="mobile-sidebar-toggle"
+      type="button"
+      class="p-2 rounded-md border border-paper-border dark:border-night-border bg-paper-elevated dark:bg-night-card text-sumi-soft dark:text-nightText-soft hover:text-hanko dark:hover:text-hanko-light focus:outline-none"
+      aria-label="Toggle navigation sidebar"
+      aria-expanded="false"
+    >
+      <svg id="sidebar-hamburger-icon" class="w-4 h-4 block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+      <svg id="sidebar-close-icon" class="w-4 h-4 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile Sidebar Backdrop -->
+<div
+  id="sidebar-backdrop"
+  class="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs hidden lg:hidden transition-opacity"
+  aria-hidden="true"
+></div>
+
+<!-- Left Sidebar (Fixed on Desktop, Slide-over Drawer on Mobile) -->
+<aside
+  id="main-sidebar"
+  class="fixed top-0 bottom-0 left-0 z-50 w-72 max-w-[85vw] -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out border-r border-paper-border dark:border-night-border bg-paper dark:bg-night flex flex-col justify-between overflow-y-auto"
+  aria-label="Main navigation sidebar"
+>
+  <!-- Top: Profile & Brand Section -->
+  <div class="p-6 space-y-4 border-b border-paper-border/60 dark:border-night-border/60">
+    <!-- Circular User Avatar -->
+    <div class="flex items-center justify-start">
+      <a href={homeUrl} class="group relative block focus:outline-none">
+        <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-paper-border dark:border-night-border shadow-md group-hover:border-hanko dark:group-hover:border-hanko-light transition-all">
+          <img
+            src={avatarUrl}
+            alt="Elaraby Avatar"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        </div>
+        <div class="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-detective-teal border-2 border-paper dark:border-night shadow-xs" title="Telemetry Online">
+          <span class="block w-full h-full rounded-full bg-white/40 animate-ping"></span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Blog Name and Bio -->
+    <div>
+      <a href={homeUrl} class="block group">
+        <h1 class="font-mono text-xl font-bold text-sumi dark:text-nightText tracking-tight group-hover:text-hanko dark:group-hover:text-hanko-light transition-colors">
+          Elaraby Blog
+        </h1>
+        <div class="text-xs font-mono text-hanko dark:text-hanko-light font-medium">
+          <span>COSMOS LOG // TECH EXPEDITIONS</span>
+        </div>
+      </a>
+      <p class="mt-2 text-xs text-sumi-muted dark:text-nightText-muted leading-relaxed font-sans">
+        A personal space log for backend architecture, AI service layers, distributed systems, and software engineering.
+      </p>
+    </div>
+
+    <!-- Search Button inside Sidebar -->
+    <button
+      type="button"
+      onclick="window.openSearchModal ? window.openSearchModal() : null"
+      class="w-full flex items-center justify-between px-3 py-2 rounded-lg border border-paper-border dark:border-night-border bg-paper-elevated dark:bg-night-card text-sumi-muted dark:text-nightText-muted hover:text-hanko dark:hover:text-hanko-light hover:border-hanko/30 dark:hover:border-hanko-light/30 transition-colors text-xs font-mono focus:outline-none focus:ring-2 focus:ring-hanko/30 shadow-2xs"
+    >
+      <div class="flex items-center gap-2">
+        <svg class="w-3.5 h-3.5 text-sumi-muted dark:text-nightText-muted" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <span>Search mission logs...</span>
+      </div>
+      <kbd class="px-1.5 py-0.5 rounded text-[10px] bg-paper-muted dark:bg-night-highlight border border-paper-border dark:border-night-border text-sumi-faint dark:text-nightText-faint">
+        ⌘K
+      </kbd>
+    </button>
+  </div>
+
+  <!-- Middle: Main Navigation Menu -->
+  <nav class="flex-1 p-4 space-y-1.5 font-mono text-xs sm:text-sm">
+    <div class="px-3 py-1 text-[10px] uppercase tracking-wider text-sumi-faint dark:text-nightText-faint font-semibold">
+      // ORBIT NAVIGATION
+    </div>
+
+    <a
+      href={homeUrl}
+      class={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+        isActive(homeUrl)
+          ? 'text-hanko dark:text-hanko-light font-bold bg-hanko/10 dark:bg-hanko-light/10 border-l-3 border-hanko dark:border-hanko-light'
+          : 'text-sumi-soft dark:text-nightText-soft hover:text-sumi dark:hover:text-nightText hover:bg-paper-muted dark:hover:bg-night-card'
+      }`}
+    >
+      <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+      </svg>
+      <span>Mission Control (Home)</span>
+    </a>
+
+    <a
+      href={articlesUrl}
+      class={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+        isActive(articlesUrl)
+          ? 'text-hanko dark:text-hanko-light font-bold bg-hanko/10 dark:bg-hanko-light/10 border-l-3 border-hanko dark:border-hanko-light'
+          : 'text-sumi-soft dark:text-nightText-soft hover:text-sumi dark:hover:text-nightText hover:bg-paper-muted dark:hover:bg-night-card'
+      }`}
+    >
+      <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+      </svg>
+      <span>Flight Logs & Articles</span>
+    </a>
+
+    <a
+      href={categoriesUrl}
+      class={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+        isActive(categoriesUrl)
+          ? 'text-hanko dark:text-hanko-light font-bold bg-hanko/10 dark:bg-hanko-light/10 border-l-3 border-hanko dark:border-hanko-light'
+          : 'text-sumi-soft dark:text-nightText-soft hover:text-sumi dark:hover:text-nightText hover:bg-paper-muted dark:hover:bg-night-card'
+      }`}
+    >
+      <svg class="w-4 h-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+      </svg>
+      <span>Categories</span>
+    </a>
+  </nav>
+
+  <!-- Bottom: Theme Toggle & RSS -->
+  <div class="p-4 border-t border-paper-border/60 dark:border-night-border/60 space-y-3 font-mono text-xs">
+    <div class="flex items-center justify-between">
+      <span class="text-sumi-muted dark:text-nightText-muted text-[11px]">Theme</span>
+      <ThemeToggle />
+    </div>
+
+    <div class="pt-1 flex items-center justify-between text-[11px] text-sumi-muted dark:text-nightText-muted">
+      <a href={rssUrl} class="flex items-center gap-1 hover:text-hanko dark:hover:text-hanko-light transition-colors">
+        <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 11-2 0 1 1 0 012 0z" />
+        </svg>
+        <span>Telemetry RSS</span>
+      </a>
+
+      <span class="text-[10px] text-sumi-faint dark:text-nightText-faint">
+        © 2026 Elaraby
+      </span>
+    </div>
+  </div>
+</aside>
+
+<script>
+  function setupSidebarDrawer() {
+    const toggleBtn = document.getElementById('mobile-sidebar-toggle');
+    const sidebar = document.getElementById('main-sidebar');
+    const backdrop = document.getElementById('sidebar-backdrop');
+    const hamburger = document.getElementById('sidebar-hamburger-icon');
+    const close = document.getElementById('sidebar-close-icon');
+
+    if (!toggleBtn || !sidebar || !backdrop) return;
+
+    function openSidebar() {
+      sidebar.classList.remove('-translate-x-full');
+      backdrop.classList.remove('hidden');
+      toggleBtn.setAttribute('aria-expanded', 'true');
+      hamburger?.classList.add('hidden');
+      close?.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+      sidebar.classList.add('-translate-x-full');
+      backdrop.classList.add('hidden');
+      toggleBtn.setAttribute('aria-expanded', 'false');
+      hamburger?.classList.remove('hidden');
+      close?.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+      if (isExpanded) {
+        closeSidebar();
+      } else {
+        openSidebar();
+      }
+    });
+
+    backdrop.addEventListener('click', closeSidebar);
+
+    // Close on escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !sidebar.classList.contains('-translate-x-full')) {
+        closeSidebar();
+      }
+    });
+  }
+
+  setupSidebarDrawer();
+  document.addEventListener('astro:after-swap', setupSidebarDrawer);
+</script>

@@ -1,0 +1,248 @@
+---
+import { resolvePath } from '../utils/paths.js';
+
+const searchIndexUrl = resolvePath('search-index.json');
+---
+
+<div
+  id="search-modal-backdrop"
+  class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-start justify-center pt-16 sm:pt-24 px-4 transition-opacity"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Search articles"
+>
+  <div
+    id="search-modal-container"
+    class="w-full max-w-2xl bg-paper-elevated dark:bg-night-surface border border-paper-border dark:border-night-border rounded-xl shadow-2xl overflow-hidden transform transition-transform"
+  >
+    <!-- Search Input Header -->
+    <div class="relative flex items-center px-4 py-3 border-b border-paper-border dark:border-night-border bg-paper dark:bg-night">
+      <svg
+        class="w-5 h-5 text-sumi-muted dark:text-nightText-muted mr-3 shrink-0"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
+      <input
+        id="search-input"
+        type="text"
+        placeholder="Search case files by title, topic, tag, or keyword..."
+        class="w-full bg-transparent text-sumi dark:text-nightText text-sm sm:text-base focus:outline-none placeholder-sumi-muted dark:placeholder-nightText-muted"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <kbd class="hidden sm:inline-flex items-center px-2 py-0.5 text-xs font-mono text-sumi-muted dark:text-nightText-muted bg-paper-muted dark:bg-night-card border border-paper-border dark:border-night-border rounded">
+        ESC
+      </kbd>
+    </div>
+
+    <!-- Results Area -->
+    <div id="search-results-list" class="max-h-96 overflow-y-auto p-3 space-y-2">
+      <div id="search-placeholder" class="py-10 text-center text-sm text-sumi-muted dark:text-nightText-muted">
+        <p class="font-mono text-xs uppercase tracking-wider text-hanko dark:text-hanko-light mb-1">
+          // ARCHIVE QUERY
+        </p>
+        <p>Type keywords to search across all case files...</p>
+      </div>
+      <div id="search-empty-state" class="py-10 text-center text-sm text-sumi-muted dark:text-nightText-muted hidden">
+        <p class="font-mono text-xs uppercase tracking-wider text-hanko dark:text-hanko-light mb-1">
+          // NO MATCHING CASES
+        </p>
+        <p>No investigation records matched your search query.</p>
+      </div>
+    </div>
+
+    <!-- Footer info -->
+    <div class="px-4 py-2 border-t border-paper-border dark:border-night-border bg-paper-muted/50 dark:bg-night-card/50 flex items-center justify-between text-xs text-sumi-muted dark:text-nightText-muted font-mono">
+      <span><strong class="text-hanko dark:text-hanko-light">↑↓</strong> Navigate</span>
+      <span><strong class="text-hanko dark:text-hanko-light">↵</strong> Open</span>
+      <span><strong class="text-hanko dark:text-hanko-light">Esc</strong> Close</span>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ searchIndexUrl }}>
+  let searchIndex = null;
+  let selectedIndex = -1;
+  let currentResults = [];
+
+  const backdrop = document.getElementById('search-modal-backdrop');
+  const container = document.getElementById('search-modal-container');
+  const input = document.getElementById('search-input');
+  const resultsContainer = document.getElementById('search-results-list');
+  const placeholder = document.getElementById('search-placeholder');
+  const emptyState = document.getElementById('search-empty-state');
+
+  async function loadSearchIndex() {
+    if (searchIndex) return;
+    try {
+      const response = await fetch(searchIndexUrl);
+      if (response.ok) {
+        searchIndex = await response.json();
+      }
+    } catch (err) {
+      console.error('Failed to load search index:', err);
+    }
+  }
+
+  function openSearchModal() {
+    loadSearchIndex();
+    backdrop.classList.remove('hidden');
+    backdrop.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      input.focus();
+    }, 50);
+  }
+
+  function closeSearchModal() {
+    backdrop.classList.add('hidden');
+    backdrop.classList.remove('flex');
+    document.body.style.overflow = '';
+    input.value = '';
+    renderResults([]);
+  }
+
+  function renderResults(results) {
+    currentResults = results;
+    selectedIndex = -1;
+
+    // Remove existing result items
+    const oldItems = resultsContainer.querySelectorAll('.search-result-item');
+    oldItems.forEach((el) => el.remove());
+
+    if (!input.value.trim()) {
+      placeholder.classList.remove('hidden');
+      emptyState.classList.add('hidden');
+      return;
+    }
+
+    placeholder.classList.add('hidden');
+
+    if (results.length === 0) {
+      emptyState.classList.remove('hidden');
+      return;
+    }
+
+    emptyState.classList.add('hidden');
+
+    results.forEach((item, index) => {
+      const a = document.createElement('a');
+      a.href = item.url;
+      a.className = 'search-result-item block p-3 rounded-lg border border-transparent hover:border-paper-border dark:hover:border-night-border hover:bg-paper-muted dark:hover:bg-night-card transition-all cursor-pointer';
+      a.setAttribute('data-index', String(index));
+
+      const tagSpans = (item.tags || [])
+        .slice(0, 3)
+        .map((t) => `<span class="px-1.5 py-0.5 rounded text-[11px] bg-paper-muted dark:bg-night-highlight border border-paper-border dark:border-night-border text-sumi-muted dark:text-nightText-muted">#${t}</span>`)
+        .join(' ');
+
+      a.innerHTML = `
+        <div class="flex items-center justify-between text-xs font-mono text-sumi-muted dark:text-nightText-muted mb-1">
+          <span class="text-hanko dark:text-hanko-light font-semibold">${item.caseNumber || 'CASE FILE'}</span>
+          <span>${item.category} · ${item.date}</span>
+        </div>
+        <div class="font-semibold text-sumi dark:text-nightText text-sm mb-1">${item.title}</div>
+        <div class="text-xs text-sumi-muted dark:text-nightText-muted line-clamp-1 mb-2">${item.description}</div>
+        <div class="flex items-center gap-1.5 flex-wrap">${tagSpans}</div>
+      `;
+
+      resultsContainer.appendChild(a);
+    });
+  }
+
+  function performSearch(query) {
+    if (!searchIndex) return;
+    const q = query.toLowerCase().trim();
+    if (!q) {
+      renderResults([]);
+      return;
+    }
+
+    const matches = searchIndex.filter((item) => {
+      const titleMatch = item.title.toLowerCase().includes(q);
+      const descMatch = item.description.toLowerCase().includes(q);
+      const catMatch = item.category.toLowerCase().includes(q);
+      const tagMatch = (item.tags || []).some((t) => t.toLowerCase().includes(q));
+      return titleMatch || descMatch || catMatch || tagMatch;
+    });
+
+    renderResults(matches);
+  }
+
+  function updateActiveSelection(index) {
+    const items = resultsContainer.querySelectorAll('.search-result-item');
+    items.forEach((item, i) => {
+      if (i === index) {
+        item.classList.add('bg-paper-muted', 'dark:bg-night-card', 'border-hanko/40', 'dark:border-hanko-light/40');
+        item.scrollIntoView({ block: 'nearest' });
+      } else {
+        item.classList.remove('bg-paper-muted', 'dark:bg-night-card', 'border-hanko/40', 'dark:border-hanko-light/40');
+      }
+    });
+  }
+
+  // Event Listeners
+  input.addEventListener('input', (e) => {
+    performSearch(e.target.value);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    const items = resultsContainer.querySelectorAll('.search-result-item');
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (items.length > 0) {
+        selectedIndex = (selectedIndex + 1) % items.length;
+        updateActiveSelection(selectedIndex);
+      }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (items.length > 0) {
+        selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+        updateActiveSelection(selectedIndex);
+      }
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (selectedIndex >= 0 && currentResults[selectedIndex]) {
+        window.location.href = currentResults[selectedIndex].url;
+      } else if (currentResults.length > 0) {
+        window.location.href = currentResults[0].url;
+      }
+    }
+  });
+
+  // Global Keybindings: Cmd+K, Ctrl+K, or Slash "/"
+  window.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      if (backdrop.classList.contains('hidden')) {
+        openSearchModal();
+      } else {
+        closeSearchModal();
+      }
+    } else if (e.key === '/' && document.activeElement !== input && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+      e.preventDefault();
+      openSearchModal();
+    } else if (e.key === 'Escape' && !backdrop.classList.contains('hidden')) {
+      e.preventDefault();
+      closeSearchModal();
+    }
+  });
+
+  backdrop.addEventListener('click', (e) => {
+    if (e.target === backdrop) {
+      closeSearchModal();
+    }
+  });
+
+  // Export globally for search buttons
+  window.openSearchModal = openSearchModal;
+</script>

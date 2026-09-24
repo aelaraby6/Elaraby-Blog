@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Tag from '../../components/Tag.astro';
+import DetectiveStamp from '../../components/DetectiveStamp.astro';
+import { getPublishedPosts, getAllTags } from '../../utils/blog.js';
+
+const posts = await getPublishedPosts();
+const tags = getAllTags(posts);
+---
+
+<BaseLayout
+  title="Tags // Topic Keywords"
+  description="Explore technical case notes by specific technology tags and keywords."
+>
+  <div class="mb-10 pb-6 border-b border-paper-border dark:border-night-border">
+    <div class="flex items-center gap-2 mb-2">
+      <DetectiveStamp text="TAG REGISTRY" size="sm" />
+      <span class="text-xs font-mono text-sumi-muted dark:text-nightText-muted">{tags.length} IDENTIFIERS</span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-sumi dark:text-nightText tracking-tight mb-2">
+      Tags & Keywords
+    </h1>
+    <p class="text-sm text-sumi-soft dark:text-nightText-soft font-serif max-w-xl">
+      Cross-referenced technical tags covering languages, frameworks, protocols, and conceptual patterns.
+    </p>
+  </div>
+
+  <div class="p-6 rounded-2xl border border-paper-border dark:border-night-border bg-paper-elevated dark:bg-night-surface shadow-xs">
+    <div class="flex items-center gap-2.5 flex-wrap">
+      {tags.map((tag) => (
+        <Tag name={tag.name} count={tag.count} />
+      ))}
+    </div>
+  </div>
+</BaseLayout>

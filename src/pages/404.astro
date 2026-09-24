@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DetectiveStamp from '../components/DetectiveStamp.astro';
+import { resolvePath } from '../utils/paths.js';
+
+const homeUrl = resolvePath('');
+const articlesUrl = resolvePath('articles');
+---
+
+<BaseLayout
+  title="Case Not Found // 404"
+  description="The requested investigation file could not be located in the archives."
+>
+  <div class="py-16 sm:py-24 max-w-lg mx-auto text-center space-y-6">
+    <!-- Red Hanko Stamp -->
+    <div class="flex justify-center">
+      <DetectiveStamp text="CASE NOT FOUND" size="lg" variant="hanko" />
+    </div>
+
+    <!-- Error Title -->
+    <div class="space-y-2">
+      <h1 class="text-3xl sm:text-4xl font-extrabold font-mono text-sumi dark:text-nightText tracking-tight">
+        404 // CASE MISSING
+      </h1>
+      <p class="text-sm font-serif text-sumi-muted dark:text-nightText-muted leading-relaxed">
+        The requested record or evidence file has either been redacted, moved, or never existed in this investigation registry.
+      </p>
+    </div>
+
+    <!-- Detective Note Card -->
+    <div class="p-5 rounded-xl border border-paper-border dark:border-night-border bg-paper-elevated dark:bg-night-surface text-left font-mono text-xs space-y-2">
+      <div class="text-hanko dark:text-hanko-light font-bold">
+        // INVESTIGATOR CLUE:
+      </div>
+      <p class="text-sumi-soft dark:text-nightText-soft">
+        Check the URL path for typos, or use the global search palette (<kbd class="px-1.5 py-0.5 rounded bg-paper-muted dark:bg-night-card border border-paper-border dark:border-night-border">⌘K</kbd>) to search the case docket.
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex items-center justify-center gap-3 pt-2 font-mono text-xs">
+      <a
+        href={homeUrl}
+        class="px-4 py-2 rounded-lg bg-hanko hover:bg-hanko-hover dark:bg-hanko-light dark:hover:bg-hanko text-white dark:text-night font-semibold transition-colors"
+      >
+        Return to HQ (Home)
+      </a>
+      <a
+        href={articlesUrl}
+        class="px-4 py-2 rounded-lg border border-paper-border dark:border-night-border bg-paper-elevated dark:bg-night-card text-sumi-soft dark:text-nightText-soft hover:text-hanko dark:hover:text-hanko-light transition-colors"
+      >
+        Browse Case Archive
+      </a>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,22 @@
+{
+  "name": "case-notes-blog",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build && node -e \"const fs = require('fs'); if (fs.existsSync('src/env.d.ts')) fs.unlinkSync('src/env.d.ts');\"",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^3.1.9",
+    "@astrojs/rss": "^4.0.9",
+    "@astrojs/sitemap": "3.1.6",
+    "@astrojs/tailwind": "^5.1.2",
+    "@tailwindcss/typography": "^0.5.15",
+    "astro": "^4.16.18",
+    "reading-time": "^1.5.0",
+    "tailwindcss": "^3.4.15"
+  }
+}

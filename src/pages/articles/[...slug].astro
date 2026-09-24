@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => data.draft !== true);
+
+  // Sort newest first
+  const sortedPosts = posts.sort((a, b) => {
+    return new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime();
+  });
+
+  return sortedPosts.map((post, index) => {
+    // Next in chronological order (newer post is at index - 1, older post is at index + 1)
+    const prevPost = index < sortedPosts.length - 1 ? sortedPosts[index + 1] : null;
+    const nextPost = index > 0 ? sortedPosts[index - 1] : null;
+
+    return {
+      params: { slug: post.slug },
+      props: { post, prevPost, nextPost },
+    };
+  });
+}
+
+const { post, prevPost, nextPost } = Astro.props;
+const { Content, headings } = await post.render();
+---
+
+<ArticleLayout
+  post={post}
+  prevPost={prevPost}
+  nextPost={nextPost}
+  headings={headings}
+>
+  <Content />
+</ArticleLayout>

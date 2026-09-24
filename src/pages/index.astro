@@ -1,0 +1,143 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import CategoryBadge from '../components/CategoryBadge.astro';
+import DetectiveStamp from '../components/DetectiveStamp.astro';
+import { getPublishedPosts, getAllCategories } from '../utils/blog.js';
+import { resolvePath } from '../utils/paths.js';
+
+const posts = await getPublishedPosts();
+const featuredPost = posts.find((p) => p.data.featured) || posts[0];
+const recentPosts = posts.filter((p) => p.slug !== featuredPost.slug);
+const categories = getAllCategories(posts);
+
+const coreCategories = [
+  'Software Engineering',
+];
+
+const articlesUrl = resolvePath('articles');
+const categoriesUrl = resolvePath('categories');
+const avatarUrl = resolvePath('images/elaraby.jpg');
+---
+
+<BaseLayout
+  title="Elaraby Blog // Personal Technical Notes & Case Files"
+  description="Notes from my corner of the internet. Writing about software engineering, backend development, AI, and things I'm learning."
+>
+  <!-- Hero Editorial Introduction Section -->
+  <section class="mb-12 pb-8 border-b border-paper-border dark:border-night-border">
+    <div class="flex flex-col-reverse sm:flex-row items-center sm:items-start justify-between gap-6 sm:gap-8">
+      <div class="flex-1 space-y-3.5 text-center sm:text-left">
+        <div class="flex items-center justify-center sm:justify-start gap-2">
+          <DetectiveStamp text="INVESTIGATION LOG" size="sm" />
+          <span class="text-xs font-mono text-sumi-muted dark:text-nightText-muted">VOL. 2026 · ELARABY</span>
+        </div>
+
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-sumi dark:text-nightText tracking-tight">
+          Notes from my corner of the internet.
+        </h1>
+
+        <p class="text-base sm:text-lg text-sumi-soft dark:text-nightText-soft leading-relaxed font-serif max-w-2xl">
+          Hi, I'm Elaraby. I write about software engineering, backend architecture, AI service layers, and things I discover while studying and building systems.
+        </p>
+
+        <div class="pt-1 flex items-center justify-center sm:justify-start gap-3 text-xs font-mono text-sumi-muted dark:text-nightText-muted">
+          <span class="inline-block w-2 h-2 rounded-full bg-detective-teal animate-pulse"></span>
+          <span>{posts.length} case record cataloged in archive</span>
+        </div>
+      </div>
+
+      <!-- Circular Cartoon Detective Avatar of Elaraby -->
+      <div class="shrink-0">
+        <div class="w-32 h-32 sm:w-36 sm:h-36 lg:w-40 lg:h-40 rounded-full overflow-hidden border-2 border-paper-border dark:border-night-border shadow-md hover:border-hanko dark:hover:border-hanko-light transition-all bg-paper-muted dark:bg-night-card">
+          <img
+            src={avatarUrl}
+            alt="Elaraby Avatar"
+            class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+            loading="eager"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Case Record Section -->
+  {featuredPost && (
+    <section class="mb-12">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-hanko dark:bg-hanko-light"></span>
+          <h2 class="text-xs font-mono font-bold tracking-wider uppercase text-sumi-muted dark:text-nightText-muted">
+            Featured Case Record // TOP PRIORITY
+          </h2>
+        </div>
+        <span class="text-xs font-mono text-hanko dark:text-hanko-light font-semibold">PRIORITY ALPHA</span>
+      </div>
+
+      <ArticleCard post={featuredPost} isFeatured={true} />
+    </section>
+  )}
+
+  <!-- Recent Articles Section (if any more posts) -->
+  {recentPosts.length > 0 && (
+    <section class="mb-12">
+      <div class="flex items-center justify-between mb-6 pb-2 border-b border-paper-border dark:border-night-border">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-sumi dark:bg-nightText"></span>
+          <h2 class="text-xs font-mono font-bold tracking-wider uppercase text-sumi-muted dark:text-nightText-muted">
+            Recent Case Files // LATEST ENTRIES
+          </h2>
+        </div>
+
+        <a
+          href={articlesUrl}
+          class="text-xs font-mono font-medium text-hanko dark:text-hanko-light hover:underline inline-flex items-center gap-1"
+        >
+          <span>Browse All ({posts.length})</span>
+          <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+
+      <div class="space-y-4">
+        {recentPosts.map((post) => (
+          <ArticleCard post={post} />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Categories Section -->
+  <section class="p-6 rounded-2xl border border-paper-border dark:border-night-border bg-paper-elevated dark:bg-night-surface shadow-xs">
+    <div class="flex items-center justify-between mb-4 pb-2 border-b border-paper-border/60 dark:border-night-border/60">
+      <div class="flex items-center gap-2">
+        <DetectiveStamp text="INDEX" size="sm" variant="verified" />
+        <h2 class="text-xs font-mono font-bold tracking-wider uppercase text-sumi-muted dark:text-nightText-muted">
+          Investigation Topics & Categories
+        </h2>
+      </div>
+
+      <a
+        href={categoriesUrl}
+        class="text-xs font-mono text-hanko dark:text-hanko-light hover:underline"
+      >
+        View All Categories →
+      </a>
+    </div>
+
+    <p class="text-xs text-sumi-muted dark:text-nightText-muted mb-4 font-mono">
+      Articles and learning notes cataloged by domain expertise:
+    </p>
+
+    <div class="flex items-center gap-2 flex-wrap">
+      {coreCategories.map((catName) => {
+        const matchingCategory = categories.find((c) => c.name.toLowerCase() === catName.toLowerCase());
+        const count = matchingCategory ? matchingCategory.count : 0;
+        return (
+          <CategoryBadge category={catName} size="md" count={count > 0 ? count : undefined} />
+        );
+      })}
+    </div>
+  </section>
+</BaseLayout>

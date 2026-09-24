@@ -1,0 +1,23 @@
+---
+import { resolvePath } from '../utils/paths.js';
+import { slugify } from '../utils/blog.js';
+
+const { category, size = 'sm', count } = Astro.props;
+const categoryUrl = resolvePath(`categories/${slugify(category)}`);
+
+const sizeStyles = {
+  sm: 'text-xs px-2.5 py-0.5',
+  md: 'text-sm px-3 py-1',
+};
+---
+
+<a
+  href={categoryUrl}
+  class={`inline-flex items-center gap-1.5 rounded font-mono font-medium border border-paper-border dark:border-night-border bg-paper-muted dark:bg-night-card text-sumi-soft dark:text-nightText-soft hover:text-hanko dark:hover:text-hanko-light hover:border-hanko/40 dark:hover:border-hanko-light/40 transition-colors ${sizeStyles[size] || sizeStyles.sm}`}
+>
+  <span class="w-1.5 h-1.5 rounded-full bg-hanko dark:bg-hanko-light opacity-80"></span>
+  <span>{category}</span>
+  {count !== undefined && (
+    <span class="text-[11px] text-sumi-muted dark:text-nightText-muted font-normal">({count})</span>
+  )}
+</a>

@@ -1,0 +1,62 @@
+---
+import { resolvePath } from '../utils/paths.js';
+
+const {
+  title = 'Elaraby Blog // Technical Notes & Case Files',
+  description = 'A personal technical blog by Elaraby. Deep dives into software engineering, backend architecture, AI heuristics, cybersecurity, and networking.',
+  image = resolvePath('images/elaraby.jpg'),
+  articleDate,
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://example.com');
+const formattedTitle = title.includes('Elaraby Blog') ? title : `${title} · Elaraby Blog`;
+const faviconUrl = resolvePath('favicon.svg');
+const rssUrl = resolvePath('rss.xml');
+---
+
+<!-- Global Metadata -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" type="image/svg+xml" href={faviconUrl} />
+<link rel="alternate" type="application/rss+xml" title="Elaraby Blog RSS Feed" href={rssUrl} />
+<meta name="generator" content={Astro.generator} />
+
+<!-- Canonical URL -->
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Primary Meta Tags -->
+<title>{formattedTitle}</title>
+<meta name="title" content={formattedTitle} />
+<meta name="description" content={description} />
+<meta name="author" content="Elaraby" />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content={articleDate ? 'article' : 'website'} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={formattedTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={new URL(image, Astro.site || 'https://example.com')} />
+{articleDate && <meta property="article:published_time" content={articleDate} />}
+
+<!-- Twitter / X -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={canonicalURL} />
+<meta property="twitter:title" content={formattedTitle} />
+<meta property="twitter:description" content={description} />
+<meta property="twitter:image" content={new URL(image, Astro.site || 'https://example.com')} />
+
+<!-- Inline Theme Initialization (Zero Flash) -->
+<script is:inline>
+  (function () {
+    const storedTheme = localStorage.getItem('theme-preference');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (storedTheme === 'dark' || (!storedTheme && systemPrefersDark)) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  })();
+</script>

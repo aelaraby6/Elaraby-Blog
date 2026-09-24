@@ -1,0 +1,212 @@
+---
+import { resolvePath } from '../utils/paths.js';
+import ThemeToggle from './ThemeToggle.astro';
+
+const currentPath = Astro.url.pathname;
+const homeUrl = resolvePath('');
+const articlesUrl = resolvePath('articles');
+const categoriesUrl = resolvePath('categories');
+const aboutUrl = resolvePath('about');
+
+function isActive(path) {
+  const normalizedCurrent = currentPath.endsWith('/') && currentPath !== '/' ? currentPath.slice(0, -1) : currentPath;
+  const normalizedTarget = path.endsWith('/') && path !== '/' ? path.slice(0, -1) : path;
+  if (normalizedTarget === homeUrl) {
+    return normalizedCurrent === homeUrl;
+  }
+  return normalizedCurrent.startsWith(normalizedTarget);
+}
+---
+
+<header class="sticky top-0 z-40 w-full border-b border-paper-border/80 dark:border-night-border/80 bg-paper/90 dark:bg-night/90 backdrop-blur-md transition-colors">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <!-- Logo / Brand -->
+    <a href={homeUrl} class="group flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-hanko/30 rounded p-1">
+      <div class="w-8 h-8 rounded bg-hanko dark:bg-hanko-light text-white dark:text-night font-mono font-bold flex items-center justify-center text-xs shadow-xs group-hover:scale-105 transition-transform">
+        記
+      </div>
+      <div class="flex flex-col">
+        <span class="font-mono text-sm sm:text-base font-bold text-sumi dark:text-nightText tracking-tight group-hover:text-hanko dark:group-hover:text-hanko-light transition-colors">
+          CASE NOTES
+        </span>
+        <span class="text-[10px] font-mono text-sumi-muted dark:text-nightText-muted tracking-widest uppercase -mt-0.5">
+          技術事件ファイル
+        </span>
+      </div>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="hidden md:flex items-center gap-1 font-mono text-xs sm:text-sm">
+      <a
+        href={homeUrl}
+        class={`px-3 py-1.5 rounded-md transition-colors ${
+          isActive(homeUrl)
+            ? 'text-hanko dark:text-hanko-light font-semibold bg-hanko/5 dark:bg-hanko-light/10'
+            : 'text-sumi-soft dark:text-nightText-soft hover:text-sumi dark:hover:text-nightText hover:bg-paper-muted dark:hover:bg-night-card'
+        }`}
+      >
+        Home
+      </a>
+      <a
+        href={articlesUrl}
+        class={`px-3 py-1.5 rounded-md transition-colors ${
+          isActive(articlesUrl)
+            ? 'text-hanko dark:text-hanko-light font-semibold bg-hanko/5 dark:bg-hanko-light/10'
+            : 'text-sumi-soft dark:text-nightText-soft hover:text-sumi dark:hover:text-nightText hover:bg-paper-muted dark:hover:bg-night-card'
+        }`}
+      >
+        Articles
+      </a>
+      <a
+        href={categoriesUrl}
+        class={`px-3 py-1.5 rounded-md transition-colors ${
+          isActive(categoriesUrl)
+            ? 'text-hanko dark:text-hanko-light font-semibold bg-hanko/5 dark:bg-hanko-light/10'
+            : 'text-sumi-soft dark:text-nightText-soft hover:text-sumi dark:hover:text-nightText hover:bg-paper-muted dark:hover:bg-night-card'
+        }`}
+      >
+        Categories
+      </a>
+      <a
+        href={aboutUrl}
+        class={`px-3 py-1.5 rounded-md transition-colors ${
+          isActive(aboutUrl)
+            ? 'text-hanko dark:text-hanko-light font-semibold bg-hanko/5 dark:bg-hanko-light/10'
+            : 'text-sumi-soft dark:text-nightText-soft hover:text-sumi dark:hover:text-nightText hover:bg-paper-muted dark:hover:bg-night-card'
+        }`}
+      >
+        About
+      </a>
+    </nav>
+
+    <!-- Right Actions: Search, Theme Toggle, Mobile Menu Button -->
+    <div class="flex items-center gap-2">
+      <!-- Search Button (Cmd+K) -->
+      <button
+        type="button"
+        onclick="window.openSearchModal ? window.openSearchModal() : null"
+        class="flex items-center gap-2 px-2.5 py-1.5 rounded-md border border-paper-border dark:border-night-border bg-paper-elevated dark:bg-night-card text-sumi-muted dark:text-nightText-muted hover:text-hanko dark:hover:text-hanko-light hover:border-hanko/30 dark:hover:border-hanko-light/30 transition-colors text-xs font-mono focus:outline-none focus:ring-2 focus:ring-hanko/30"
+        aria-label="Open search palette"
+      >
+        <svg
+          class="w-3.5 h-3.5"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <span class="hidden sm:inline">Search</span>
+        <kbd class="hidden sm:inline-block px-1.5 py-0.2 rounded text-[10px] bg-paper-muted dark:bg-night-highlight border border-paper-border dark:border-night-border text-sumi-faint dark:text-nightText-faint">
+          ⌘K
+        </kbd>
+      </button>
+
+      <!-- Theme Toggle -->
+      <ThemeToggle />
+
+      <!-- Mobile Menu Toggle Button -->
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        class="md:hidden flex items-center justify-center w-9 h-9 rounded-md border border-paper-border dark:border-night-border bg-paper-elevated dark:bg-night-card text-sumi-soft dark:text-nightText-soft hover:text-hanko dark:hover:text-hanko-light focus:outline-none focus:ring-2 focus:ring-hanko/30"
+        aria-label="Open mobile navigation menu"
+        aria-expanded="false"
+      >
+        <svg
+          id="hamburger-icon"
+          class="w-4 h-4 block"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg
+          id="close-icon"
+          class="w-4 h-4 hidden"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Dropdown Navigation -->
+  <div
+    id="mobile-nav"
+    class="hidden md:hidden border-b border-paper-border dark:border-night-border bg-paper-elevated dark:bg-night-surface px-4 py-3 space-y-1 font-mono text-sm"
+  >
+    <a
+      href={homeUrl}
+      class={`block px-3 py-2 rounded-md transition-colors ${
+        isActive(homeUrl)
+          ? 'text-hanko dark:text-hanko-light font-semibold bg-hanko/5 dark:bg-hanko-light/10'
+          : 'text-sumi-soft dark:text-nightText-soft hover:bg-paper-muted dark:hover:bg-night-card'
+      }`}
+    >
+      Home
+    </a>
+    <a
+      href={articlesUrl}
+      class={`block px-3 py-2 rounded-md transition-colors ${
+        isActive(articlesUrl)
+          ? 'text-hanko dark:text-hanko-light font-semibold bg-hanko/5 dark:bg-hanko-light/10'
+          : 'text-sumi-soft dark:text-nightText-soft hover:bg-paper-muted dark:hover:bg-night-card'
+      }`}
+    >
+      Articles
+    </a>
+    <a
+      href={categoriesUrl}
+      class={`block px-3 py-2 rounded-md transition-colors ${
+        isActive(categoriesUrl)
+          ? 'text-hanko dark:text-hanko-light font-semibold bg-hanko/5 dark:bg-hanko-light/10'
+          : 'text-sumi-soft dark:text-nightText-soft hover:bg-paper-muted dark:hover:bg-night-card'
+      }`}
+    >
+      Categories
+    </a>
+    <a
+      href={aboutUrl}
+      class={`block px-3 py-2 rounded-md transition-colors ${
+        isActive(aboutUrl)
+          ? 'text-hanko dark:text-hanko-light font-semibold bg-hanko/5 dark:bg-hanko-light/10'
+          : 'text-sumi-soft dark:text-nightText-soft hover:bg-paper-muted dark:hover:bg-night-card'
+      }`}
+    >
+      About
+    </a>
+  </div>
+</header>
+
+<script>
+  function setupMobileMenu() {
+    const btn = document.getElementById('mobile-menu-btn');
+    const nav = document.getElementById('mobile-nav');
+    const hamburger = document.getElementById('hamburger-icon');
+    const close = document.getElementById('close-icon');
+
+    if (!btn || !nav) return;
+
+    btn.addEventListener('click', () => {
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!isExpanded));
+      nav.classList.toggle('hidden');
+      hamburger?.classList.toggle('hidden');
+      close?.classList.toggle('hidden');
+    });
+  }
+
+  setupMobileMenu();
+  document.addEventListener('astro:after-swap', setupMobileMenu);
+</script>

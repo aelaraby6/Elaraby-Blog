@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CategoryBadge from '../../components/CategoryBadge.astro';
+import DetectiveStamp from '../../components/DetectiveStamp.astro';
+import { getPublishedPosts, getAllCategories } from '../../utils/blog.js';
+import { resolvePath } from '../../utils/paths.js';
+
+const posts = await getPublishedPosts();
+const categories = getAllCategories(posts);
+---
+
+<BaseLayout
+  title="Categories // Investigation Topics"
+  description="Explore technical case notes by domain: Backend, AI, Cybersecurity, Networking, and more."
+>
+  <div class="mb-10 pb-6 border-b border-paper-border dark:border-night-border">
+    <div class="flex items-center gap-2 mb-2">
+      <DetectiveStamp text="INDEX CLASSIFICATION" size="sm" />
+      <span class="text-xs font-mono text-sumi-muted dark:text-nightText-muted">TAXONOMY</span>
+    </div>
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-sumi dark:text-nightText tracking-tight mb-2">
+      Categories & Investigation Topics
+    </h1>
+    <p class="text-sm text-sumi-soft dark:text-nightText-soft font-serif max-w-xl">
+      Browse articles organized into core software engineering disciplines and research areas.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {categories.map((cat) => (
+      <a
+        href={resolvePath(`categories/${cat.slug}`)}
+        class="group p-6 rounded-2xl border border-paper-border dark:border-night-border bg-paper-elevated dark:bg-night-surface hover:border-hanko/40 dark:hover:border-hanko-light/40 transition-all shadow-xs hover:shadow-sm flex flex-col justify-between"
+      >
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-bold text-lg text-sumi dark:text-nightText group-hover:text-hanko dark:group-hover:text-hanko-light transition-colors font-mono">
+              {cat.name}
+            </span>
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-hanko/5 dark:bg-hanko-light/10 text-hanko dark:text-hanko-light border border-hanko/20 dark:border-hanko-light/20 font-bold">
+              {cat.count} {cat.count === 1 ? 'case' : 'cases'}
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-sumi-muted dark:text-nightText-muted leading-relaxed font-sans mb-4">
+            {cat.description}
+          </p>
+        </div>
+
+        <div class="pt-3 border-t border-paper-border/60 dark:border-night-border/60 flex items-center justify-between text-xs font-mono text-hanko dark:text-hanko-light">
+          <span>Open Category Archive</span>
+          <span class="group-hover:translate-x-1 transition-transform">→</span>
+        </div>
+      </a>
+    ))}
+  </div>
+</BaseLayout>

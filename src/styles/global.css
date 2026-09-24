@@ -1,0 +1,251 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-paper: #FAF8F5;
+    --text-sumi: #1C2127;
+    --border-paper: #E6E0D6;
+    --grid-line: rgba(200, 190, 175, 0.25);
+  }
+
+  html.dark {
+    --bg-paper: #0E1217;
+    --text-sumi: #ECEEF2;
+    --border-paper: #283141;
+    --grid-line: rgba(45, 55, 75, 0.35);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  body {
+    background-color: var(--bg-paper);
+    color: var(--text-sumi);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-image: 
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: 0 0;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+}
+
+/* Explicit Dark Mode Article Typography Readability Overrides */
+html.dark .prose {
+  color: #E2E8F0 !important;
+}
+
+html.dark .prose p,
+html.dark .prose li,
+html.dark .prose ul,
+html.dark .prose ol,
+html.dark .prose td,
+html.dark .prose th {
+  color: #D1D5DB !important;
+  line-height: 1.85;
+}
+
+html.dark .prose h1,
+html.dark .prose h2,
+html.dark .prose h3,
+html.dark .prose h4,
+html.dark .prose strong {
+  color: #F9FAFB !important;
+}
+
+html.dark .prose h2 {
+  border-bottom-color: #374151 !important;
+}
+
+html.dark .prose code:not(pre code) {
+  color: #F87171 !important;
+  background-color: #1F2937 !important;
+  border: 1px solid #374151;
+}
+
+html.dark .prose blockquote {
+  color: #E5E7EB !important;
+  background-color: #1F2937 !important;
+  border-left-color: #F87171 !important;
+}
+
+html.dark .prose a {
+  color: #F87171 !important;
+}
+
+html.dark .prose a:hover {
+  color: #FCA5A5 !important;
+}
+
+html.dark .prose hr {
+  border-color: #374151 !important;
+}
+
+/* =========================================================
+   CODE BLOCKS & ASCII DIAGRAMS CONTRAST FIX
+   ========================================================= */
+
+/* Base code block */
+.astro-code {
+  border-radius: 0.5rem;
+  padding: 1.25rem 1rem !important;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  overflow-x: auto;
+  border: 1px solid var(--border-paper);
+}
+
+/* Light Mode Code Background */
+html:not(.dark) .astro-code {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+/* Dark Mode Code Block & Plaintext Visibility */
+html.dark .astro-code {
+  background-color: #0D1117 !important;
+  color: #E6EDF3 !important;
+  border-color: #30363D !important;
+}
+
+html.dark .astro-code code {
+  color: #E6EDF3 !important;
+}
+
+/* Shiki Dual Theme Variable Handling */
+html.dark .astro-code span {
+  color: var(--shiki-dark, #E6EDF3) !important;
+}
+
+/* Plaintext and Diagrams in Dark Mode */
+html.dark .astro-code[data-language="plaintext"],
+html.dark .astro-code[data-language="text"],
+html.dark .astro-code:not([data-language]) {
+  color: #E6EDF3 !important;
+}
+
+html.dark .astro-code[data-language="plaintext"] span,
+html.dark .astro-code[data-language="text"] span {
+  color: #E6EDF3 !important;
+}
+
+/* Code block container wrapper */
+.code-block-wrapper {
+  position: relative;
+  margin: 1.75rem 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid #E2E8F0;
+  background-color: #FFFFFF;
+}
+
+html.dark .code-block-wrapper {
+  border-color: #30363D;
+  background-color: #0D1117;
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0.85rem;
+  background-color: #F1F5F9;
+  border-bottom: 1px solid #E2E8F0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #475569;
+}
+
+html.dark .code-header {
+  background-color: #161B22;
+  border-bottom-color: #30363D;
+  color: #8B949E;
+}
+
+.code-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.code-copy-btn:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+  color: #C23B2B;
+}
+
+html.dark .code-copy-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #F87171;
+}
+
+/* Custom delicate scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D8D1C5;
+  border-radius: 4px;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #313B4E;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C2B8A8;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #414E66;
+}
+
+/* Case file card accent lines */
+.case-card-border {
+  position: relative;
+}
+
+.case-card-border::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, #C23B2B, #1E2D4A);
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.case-card-border:hover::before {
+  opacity: 1;
+}
+
+/* Investigation grid overlay */
+.investigation-grid {
+  background-image: radial-gradient(circle, rgba(194, 59, 43, 0.15) 1px, transparent 1px);
+  background-size: 16px 16px;
+}

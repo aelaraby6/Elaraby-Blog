@@ -1,0 +1,21 @@
+---
+import { resolvePath } from '../utils/paths.js';
+import { slugify } from '../utils/blog.js';
+
+const { name, count, active = false } = Astro.props;
+const tagUrl = resolvePath(`tags/${slugify(name)}`);
+---
+
+<a
+  href={tagUrl}
+  class={`inline-flex items-center text-xs font-mono px-2 py-0.5 rounded transition-all ${
+    active
+      ? 'bg-hanko text-white dark:bg-hanko-light dark:text-night font-semibold shadow-sm'
+      : 'text-sumi-muted dark:text-nightText-muted bg-paper-muted/60 dark:bg-night-highlight/60 border border-paper-border dark:border-night-border hover:text-hanko dark:hover:text-hanko-light hover:border-hanko/30 dark:hover:border-hanko-light/30'
+  }`}
+>
+  <span>#{name}</span>
+  {count !== undefined && (
+    <span class="ml-1 text-[10px] opacity-75">{count}</span>
+  )}
+</a>

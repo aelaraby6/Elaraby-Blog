@@ -1,0 +1,79 @@
+---
+import { resolvePath } from '../utils/paths.js';
+import { formatDate, getReadingTime } from '../utils/blog.js';
+import CategoryBadge from './CategoryBadge.astro';
+import Tag from './Tag.astro';
+
+const { post, isFeatured = false } = Astro.props;
+const { slug, body, data } = post;
+const { title, description, pubDate, category, tags = [], caseNumber } = data;
+
+const readingTime = getReadingTime(body);
+const formattedDate = formatDate(pubDate);
+const articleUrl = resolvePath(`articles/${slug}`);
+---
+
+<article
+  class={`group relative border rounded-xl transition-all duration-200 case-card-border ${
+    isFeatured
+      ? 'p-6 sm:p-8 bg-paper-elevated dark:bg-night-surface border-paper-border dark:border-night-border shadow-sm hover:shadow-md'
+      : 'p-5 sm:p-6 bg-paper-elevated dark:bg-night-surface border-paper-border dark:border-night-border hover:border-hanko/30 dark:hover:border-hanko-light/30 shadow-xs hover:shadow-sm'
+  }`}
+>
+  <!-- Top Case Metadata Row -->
+  <div class="flex items-center justify-between gap-2 flex-wrap text-xs font-mono text-sumi-muted dark:text-nightText-muted mb-3">
+    <div class="flex items-center gap-2">
+      {caseNumber && (
+        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-bold text-hanko dark:text-hanko-light bg-hanko/5 dark:bg-hanko-light/10 border border-hanko/20 dark:border-hanko-light/20">
+          {caseNumber}
+        </span>
+      )}
+      <CategoryBadge category={category} size="sm" />
+    </div>
+
+    <div class="flex items-center gap-2">
+      <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+      <span>·</span>
+      <span>{readingTime}</span>
+    </div>
+  </div>
+
+  <!-- Title -->
+  <h3 class={`${isFeatured ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl'} font-bold text-sumi dark:text-nightText tracking-tight mb-2 group-hover:text-hanko dark:group-hover:text-hanko-light transition-colors`}>
+    <a href={articleUrl} class="focus:outline-none focus:underline">
+      {title}
+    </a>
+  </h3>
+
+  <!-- Description -->
+  <p class="text-sm text-sumi-muted dark:text-nightText-muted leading-relaxed mb-4 line-clamp-2 sm:line-clamp-3">
+    {description}
+  </p>
+
+  <!-- Tags & Read Link -->
+  <div class="flex items-center justify-between gap-4 pt-3 border-t border-paper-border/60 dark:border-night-border/60 flex-wrap">
+    <div class="flex items-center gap-1.5 flex-wrap">
+      {tags.slice(0, 4).map((tag) => (
+        <Tag name={tag} />
+      ))}
+    </div>
+
+    <a
+      href={articleUrl}
+      class="inline-flex items-center gap-1 text-xs font-mono font-medium text-hanko dark:text-hanko-light group-hover:translate-x-0.5 transition-transform"
+      aria-label={`Open investigation record: ${title}`}
+    >
+      <span>Inspect Case</span>
+      <svg
+        class="w-3.5 h-3.5"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </a>
+  </div>
+</article>

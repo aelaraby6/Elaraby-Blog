@@ -1,0 +1,80 @@
+---
+const { headings = [] } = Astro.props;
+
+// Filter to h2 and h3 headings
+const filteredHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{filteredHeadings.length > 0 && (
+  <nav
+    class="toc-container p-4 rounded-xl border border-paper-border dark:border-night-border bg-paper-elevated/70 dark:bg-night-surface/70 backdrop-blur-xs text-xs font-mono"
+    aria-label="Table of contents"
+  >
+    <div class="flex items-center justify-between pb-2 mb-3 border-b border-paper-border dark:border-night-border text-sumi dark:text-nightText font-semibold">
+      <span class="flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5 text-hanko dark:text-hanko-light" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+        </svg>
+        <span>CASE DOCKET // TOC</span>
+      </span>
+      <span class="text-[10px] text-sumi-muted dark:text-nightText-muted">INDEX</span>
+    </div>
+
+    <ul class="space-y-1.5 max-h-[70vh] overflow-y-auto pr-1">
+      {filteredHeadings.map((heading) => (
+        <li class={heading.depth === 3 ? 'ml-3' : ''}>
+          <a
+            href={`#${heading.slug}`}
+            class="toc-link block py-1 px-1.5 rounded text-sumi-muted dark:text-nightText-muted hover:text-hanko dark:hover:text-hanko-light hover:bg-paper-muted dark:hover:bg-night-card transition-colors line-clamp-1"
+            data-target={heading.slug}
+          >
+            {heading.depth === 2 ? '§ ' : '↳ '}
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+
+<script>
+  function setupTocScrollSpy() {
+    const links = document.querySelectorAll('.toc-link');
+    if (links.length === 0) return;
+
+    const headingElements = Array.from(links)
+      .map((link) => {
+        const id = link.getAttribute('data-target');
+        return id ? document.getElementById(id) : null;
+      })
+      .filter(Boolean);
+
+    if (headingElements.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute('id');
+            links.forEach((link) => {
+              if (link.getAttribute('data-target') === id) {
+                link.classList.add('text-hanko', 'dark:text-hanko-light', 'font-semibold', 'bg-hanko/5', 'dark:bg-hanko-light/10');
+              } else {
+                link.classList.remove('text-hanko', 'dark:text-hanko-light', 'font-semibold', 'bg-hanko/5', 'dark:bg-hanko-light/10');
+              }
+            });
+          }
+        });
+      },
+      {
+        rootMargin: '0px 0px -65% 0px',
+        threshold: 0.1,
+      }
+    );
+
+    headingElements.forEach((el) => observer.observe(el));
+  }
+
+  setupTocScrollSpy();
+  document.addEventListener('astro:after-swap', setupTocScrollSpy);
+</script>

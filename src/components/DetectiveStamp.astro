@@ -1,0 +1,29 @@
+---
+const {
+  text = 'CASE RECORD',
+  subtext = '',
+  size = 'md',
+  variant = 'hanko',
+  className = '',
+} = Astro.props;
+
+const sizeClasses = {
+  sm: 'text-[10px] px-1.5 py-0.5 border',
+  md: 'text-xs px-2.5 py-1 border-[1.5px]',
+  lg: 'text-sm px-3.5 py-1.5 border-2',
+};
+
+const variantClasses = {
+  hanko: 'border-hanko text-hanko dark:border-hanko-light dark:text-hanko-light bg-hanko/5 dark:bg-hanko-light/10',
+  verified: 'border-detective-teal text-detective-teal bg-detective-teal/5',
+  classified: 'border-detective-amber text-detective-amber bg-detective-amber/5',
+};
+---
+
+<span
+  class={`inline-flex flex-col items-center justify-center font-mono font-bold uppercase tracking-wider rounded-sm select-none transform -rotate-2 ${sizeClasses[size] || sizeClasses.md} ${variantClasses[variant] || variantClasses.hanko} ${className}`}
+  aria-label={subtext ? `${text} ${subtext}` : text}
+>
+  <span class="leading-none">{text}</span>
+  {subtext && <span class="text-[8px] tracking-normal font-mono opacity-85 mt-0.5">{subtext}</span>}
+</span>
