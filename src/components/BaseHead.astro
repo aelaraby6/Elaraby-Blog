@@ -2,14 +2,14 @@
 import { resolvePath } from '../utils/paths.js';
 
 const {
-  title = 'Elaraby Blog // Technical Notes & Space Logs',
+  title = 'Elaraby Blog',
   description = 'A personal space log by Elaraby. Deep dives into software engineering, backend architecture, AI service layers, and distributed systems.',
   image = resolvePath('images/elaraby.jpg'),
   articleDate,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://example.com');
-const formattedTitle = title.includes('Elaraby Blog') ? title : `${title} · Elaraby Blog`;
+const formattedTitle = title === 'Elaraby Blog' || title.includes('Elaraby Blog') ? title : `${title} · Elaraby Blog`;
 const faviconUrl = resolvePath('favicon.svg');
 const rssUrl = resolvePath('rss.xml');
 ---

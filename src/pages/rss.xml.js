@@ -6,8 +6,8 @@ export async function GET(context) {
   const posts = await getPublishedPosts();
 
   return rss({
-    title: 'Elaraby Blog // Personal Space Logs & Architecture',
-    description: 'Personal space log by Elaraby. Deep dives into software engineering, backend architecture, AI service layers, and distributed systems.',
+    title: 'Elaraby Blog',
+    description: 'Personal technical blog by Elaraby. Deep dives into software engineering, backend architecture, AI service layers, and distributed systems.',
     site: context.site || 'https://example.com',
     items: posts.map((post) => ({
       title: post.data.title,
