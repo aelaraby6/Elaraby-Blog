@@ -14,6 +14,7 @@ tags:
   - Edge Computing
 caseNumber: "CASE #002"
 featured: true
+coverImage: "/images/basira-preview.jpg"
 ---
 
 For people with low vision or visual impairments, daily interactions with printed physical documents—utility bills, medical prescriptions, government notifications, lab reports, and medication leaflets—present a severe accessibility barrier.
@@ -61,8 +62,8 @@ Before diving into the underlying software architecture, here is a full demonstr
   <video
     controls
     preload="metadata"
-    class="w-full rounded-xl border border-paper-border/80 dark:border-night-border/80 shadow-xs bg-black aspect-video"
-    poster="/images/detective.svg"
+    class="w-full rounded-xl border border-paper-border/80 dark:border-night-border/80 shadow-xs bg-black aspect-video object-cover"
+    poster="/images/basira-preview.jpg"
   >
     <source src="/videos/basyra.mp4" type="video/mp4" />
     Your browser does not support playing embedded HTML5 videos.
@@ -89,7 +90,6 @@ Building an edge AI pipeline that runs smoothly without dedicated datacenter GPU
   </div>
 
   <div class="space-y-4">
-    <!-- Step 1: Input -->
     <div class="p-4 rounded-xl border border-paper-border dark:border-night-border bg-paper dark:bg-night-surface flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
       <div class="flex items-center gap-3">
         <span class="w-7 h-7 rounded-lg bg-hanko/10 dark:bg-hanko-light/10 text-hanko dark:text-hanko-light font-mono font-bold flex items-center justify-center text-xs shrink-0">01</span>
@@ -101,7 +101,6 @@ Building an edge AI pipeline that runs smoothly without dedicated datacenter GPU
       <span class="text-[11px] font-mono px-2.5 py-1 rounded-full bg-paper-muted dark:bg-night-highlight text-sumi-soft dark:text-nightText-soft border border-paper-border dark:border-night-border">Raw Image Payload</span>
     </div>
 
-    <!-- Arrow down -->
     <div class="flex justify-center text-sumi-muted dark:text-nightText-muted text-xs font-mono">
       <span class="px-3 py-0.5 rounded-full bg-paper-muted/80 dark:bg-night-surface border border-paper-border dark:border-night-border flex items-center gap-1.5">
         <span>↓</span>
@@ -109,7 +108,6 @@ Building an edge AI pipeline that runs smoothly without dedicated datacenter GPU
       </span>
     </div>
 
-    <!-- Step 2: OCR -->
     <div class="p-4 rounded-xl border border-paper-border dark:border-night-border bg-paper dark:bg-night-surface">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-2">
         <div class="flex items-center gap-3">
@@ -128,7 +126,6 @@ Building an edge AI pipeline that runs smoothly without dedicated datacenter GPU
       </div>
     </div>
 
-    <!-- Arrow down -->
     <div class="flex justify-center text-sumi-muted dark:text-nightText-muted text-xs font-mono">
       <span class="px-3 py-0.5 rounded-full bg-paper-muted/80 dark:bg-night-surface border border-paper-border dark:border-night-border flex items-center gap-1.5">
         <span>↓</span>
@@ -136,7 +133,6 @@ Building an edge AI pipeline that runs smoothly without dedicated datacenter GPU
       </span>
     </div>
 
-    <!-- Step 3: LLM -->
     <div class="p-4 rounded-xl border border-paper-border dark:border-night-border bg-paper dark:bg-night-surface">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-2">
         <div class="flex items-center gap-3">
@@ -155,7 +151,6 @@ Building an edge AI pipeline that runs smoothly without dedicated datacenter GPU
       </div>
     </div>
 
-    <!-- Arrow down -->
     <div class="flex justify-center text-sumi-muted dark:text-nightText-muted text-xs font-mono">
       <span class="px-3 py-0.5 rounded-full bg-paper-muted/80 dark:bg-night-surface border border-paper-border dark:border-night-border flex items-center gap-1.5">
         <span>↓</span>
@@ -163,7 +158,6 @@ Building an edge AI pipeline that runs smoothly without dedicated datacenter GPU
       </span>
     </div>
 
-    <!-- Step 4: TTS -->
     <div class="p-4 rounded-xl border border-paper-border dark:border-night-border bg-paper dark:bg-night-surface">
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-2">
         <div class="flex items-center gap-3">
@@ -181,7 +175,6 @@ Building an edge AI pipeline that runs smoothly without dedicated datacenter GPU
       </div>
     </div>
 
-    <!-- Arrow down -->
     <div class="flex justify-center text-sumi-muted dark:text-nightText-muted text-xs font-mono">
       <span class="px-3 py-0.5 rounded-full bg-paper-muted/80 dark:bg-night-surface border border-paper-border dark:border-night-border flex items-center gap-1.5">
         <span>↓</span>
@@ -189,7 +182,6 @@ Building an edge AI pipeline that runs smoothly without dedicated datacenter GPU
       </span>
     </div>
 
-    <!-- Step 5: Output -->
     <div class="p-4 rounded-xl border-2 border-detective-teal/50 bg-detective-teal/5 dark:bg-detective-teal/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
       <div class="flex items-center gap-3">
         <span class="w-7 h-7 rounded-lg bg-detective-teal text-paper font-mono font-bold flex items-center justify-center text-xs shrink-0">05</span>
