@@ -1,0 +1,462 @@
+---
+title: "Building Basira: An Offline, Privacy-First AI Document Reader & Voice Assistant"
+description: "An in-depth architectural breakdown of Basira (بصيرة)—an open-source, edge AI document reader designed for people with low vision that combines Pillow image preprocessing, Tesseract OCR, local Ollama LLMs, and Piper neural speech synthesis with zero cloud dependency."
+pubDate: 2026-10-04
+category: "AI"
+tags:
+  - AI
+  - Computer Vision
+  - OCR
+  - Local LLM
+  - Text-to-Speech
+  - Accessibility
+  - Python
+  - Edge Computing
+caseNumber: "CASE #002"
+featured: true
+---
+
+For people with low vision or visual impairments, daily interactions with printed physical documents—utility bills, medical prescriptions, government notifications, lab reports, and medication leaflets—present a severe accessibility barrier.
+
+While modern smartphone cloud apps (such as Seeing AI or Google Lookout) offer optical character recognition, they introduce two critical friction points: **privacy vulnerabilities** and **cloud dependency**. Uploading sensitive medical records or financial invoices to remote servers is a serious concern for privacy-conscious users. Furthermore, relying on active internet connections or recurring monthly subscriptions restricts accessibility in remote areas or low-connectivity environments.
+
+To address this challenge, I designed and developed **Basira (بصيرة)**: an open-source, 100% offline, local-first document reader and voice assistant. Basira allows a user to photograph or scan any physical document, automatically extracts bilingual text (Arabic and English), distills and simplifies complex terms using a local Large Language Model, and reads the essential findings aloud using natural neural speech synthesis—all running locally on standard laptop or desktop hardware.
+
+<div class="my-6 p-4 rounded-xl border border-paper-border dark:border-night-border bg-paper-muted/50 dark:bg-night-card/70 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs">
+  <div class="flex items-center gap-3">
+    <svg class="w-6 h-6 text-sumi dark:text-nightText shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+    </svg>
+    <div>
+      <span class="font-bold text-sumi dark:text-nightText block">Source Code Repository</span>
+      <span class="text-sumi-muted dark:text-nightText-muted text-[11px]">MIT Licensed • Open Source • Full Python Implementation</span>
+    </div>
+  </div>
+  <a
+    href="https://github.com/aelaraby6/Basira"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sumi dark:bg-nightText text-paper dark:text-night font-bold hover:bg-hanko dark:hover:bg-hanko-light dark:hover:text-night transition-colors"
+  >
+    <span>View on GitHub</span>
+    <span>→</span>
+  </a>
+</div>
+
+---
+
+## 1. Live System Demonstration
+
+Before diving into the underlying software architecture, here is a full demonstration of Basira processing a physical document in real time:
+
+<div class="my-8 rounded-2xl overflow-hidden border border-paper-border dark:border-night-border bg-paper-elevated dark:bg-night-card shadow-md p-2 sm:p-4">
+  <div class="flex items-center justify-between px-2 pb-3 mb-2 border-b border-paper-border/60 dark:border-night-border/60 text-xs font-mono text-sumi-muted dark:text-nightText-muted">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-detective-teal animate-pulse"></span>
+      <span class="font-bold text-sumi dark:text-nightText">LIVE TELEMETRY // BASIRA WORKFLOW DEMO</span>
+    </div>
+    <span class="text-[11px] uppercase tracking-wider">Format: MP4 (1080p)</span>
+  </div>
+
+  <video
+    controls
+    preload="metadata"
+    class="w-full rounded-xl border border-paper-border/80 dark:border-night-border/80 shadow-xs bg-black aspect-video"
+    poster="/images/detective.svg"
+  >
+    <source src="/videos/basyra.mp4" type="video/mp4" />
+    Your browser does not support playing embedded HTML5 videos.
+  </video>
+
+  <p class="mt-3 text-xs font-mono text-center text-sumi-muted dark:text-nightText-muted">
+    Demonstration: Capturing paper document, preprocessing, dual-engine OCR, Qwen 2.5 distillation, and Arabic Piper neural audio readout.
+  </p>
+</div>
+
+---
+
+## 2. End-to-End System Architecture
+
+Building an edge AI pipeline that runs smoothly without dedicated datacenter GPUs requires a lean, decoupled architecture. Every stage in Basira is isolated into a single-responsibility service orchestrated by a central processor.
+
+<div class="my-8 p-5 sm:p-6 rounded-2xl border border-paper-border dark:border-night-border bg-paper-elevated/70 dark:bg-night-card shadow-sm">
+  <div class="flex items-center justify-between pb-4 mb-6 border-b border-paper-border/60 dark:border-night-border/60 text-xs font-mono text-sumi-muted dark:text-nightText-muted">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-hanko dark:bg-hanko-light"></span>
+      <span class="font-bold text-sumi dark:text-nightText uppercase tracking-wider">System Pipeline // Decoupled Edge Architecture</span>
+    </div>
+    <span class="px-2 py-0.5 rounded bg-paper-muted dark:bg-night-surface border border-paper-border dark:border-night-border text-[11px]">100% Offline</span>
+  </div>
+
+  <div class="space-y-4">
+    <!-- Step 1: Input -->
+    <div class="p-4 rounded-xl border border-paper-border dark:border-night-border bg-paper dark:bg-night-surface flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="w-7 h-7 rounded-lg bg-hanko/10 dark:bg-hanko-light/10 text-hanko dark:text-hanko-light font-mono font-bold flex items-center justify-center text-xs shrink-0">01</span>
+        <div>
+          <h4 class="text-sm font-bold text-sumi dark:text-nightText font-mono">Capture & Input Layer</h4>
+          <p class="text-xs text-sumi-muted dark:text-nightText-muted">Smartphone Camera / Webcam / Gradio Web Interface</p>
+        </div>
+      </div>
+      <span class="text-[11px] font-mono px-2.5 py-1 rounded-full bg-paper-muted dark:bg-night-highlight text-sumi-soft dark:text-nightText-soft border border-paper-border dark:border-night-border">Raw Image Payload</span>
+    </div>
+
+    <!-- Arrow down -->
+    <div class="flex justify-center text-sumi-muted dark:text-nightText-muted text-xs font-mono">
+      <span class="px-3 py-0.5 rounded-full bg-paper-muted/80 dark:bg-night-surface border border-paper-border dark:border-night-border flex items-center gap-1.5">
+        <span>↓</span>
+        <span class="text-[10px]">Image Tensor</span>
+      </span>
+    </div>
+
+    <!-- Step 2: OCR -->
+    <div class="p-4 rounded-xl border border-paper-border dark:border-night-border bg-paper dark:bg-night-surface">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-2">
+        <div class="flex items-center gap-3">
+          <span class="w-7 h-7 rounded-lg bg-hanko/10 dark:bg-hanko-light/10 text-hanko dark:text-hanko-light font-mono font-bold flex items-center justify-center text-xs shrink-0">02</span>
+          <div>
+            <h4 class="text-sm font-bold text-sumi dark:text-nightText font-mono">Vision & OCR Subsystem</h4>
+            <p class="text-xs text-sumi-muted dark:text-nightText-muted">Pillow Dynamic Normalization + Tesseract Engine</p>
+          </div>
+        </div>
+        <span class="text-[11px] font-mono px-2.5 py-1 rounded-full bg-paper-muted dark:bg-night-highlight text-sumi-soft dark:text-nightText-soft border border-paper-border dark:border-night-border">Pillow + Tesseract</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-3 pt-3 border-t border-paper-border/40 dark:border-night-border/40 text-[11px] font-mono text-sumi-muted dark:text-nightText-muted">
+        <div class="flex items-center gap-1.5"><span>•</span> EXIF Transposition</div>
+        <div class="flex items-center gap-1.5"><span>•</span> Autocontrast & Upscaling</div>
+        <div class="flex items-center gap-1.5"><span>•</span> Bilingual OCR (ara + eng)</div>
+      </div>
+    </div>
+
+    <!-- Arrow down -->
+    <div class="flex justify-center text-sumi-muted dark:text-nightText-muted text-xs font-mono">
+      <span class="px-3 py-0.5 rounded-full bg-paper-muted/80 dark:bg-night-surface border border-paper-border dark:border-night-border flex items-center gap-1.5">
+        <span>↓</span>
+        <span class="text-[10px]">Extracted Raw Text</span>
+      </span>
+    </div>
+
+    <!-- Step 3: LLM -->
+    <div class="p-4 rounded-xl border border-paper-border dark:border-night-border bg-paper dark:bg-night-surface">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-2">
+        <div class="flex items-center gap-3">
+          <span class="w-7 h-7 rounded-lg bg-hanko/10 dark:bg-hanko-light/10 text-hanko dark:text-hanko-light font-mono font-bold flex items-center justify-center text-xs shrink-0">03</span>
+          <div>
+            <h4 class="text-sm font-bold text-sumi dark:text-nightText font-mono">Local Cognitive Reasoning Layer</h4>
+            <p class="text-xs text-sumi-muted dark:text-nightText-muted">Ollama Runtime + Qwen 2.5 3B (Temp: 0.2)</p>
+          </div>
+        </div>
+        <span class="text-[11px] font-mono px-2.5 py-1 rounded-full bg-paper-muted dark:bg-night-highlight text-sumi-soft dark:text-nightText-soft border border-paper-border dark:border-night-border">Ollama / Qwen 2.5</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-3 pt-3 border-t border-paper-border/40 dark:border-night-border/40 text-[11px] font-mono text-sumi-muted dark:text-nightText-muted">
+        <div class="flex items-center gap-1.5"><span>•</span> Anti-hallucination guard</div>
+        <div class="flex items-center gap-1.5"><span>•</span> Key deadlines & amounts</div>
+        <div class="flex items-center gap-1.5"><span>•</span> TTS-friendly phrasing</div>
+      </div>
+    </div>
+
+    <!-- Arrow down -->
+    <div class="flex justify-center text-sumi-muted dark:text-nightText-muted text-xs font-mono">
+      <span class="px-3 py-0.5 rounded-full bg-paper-muted/80 dark:bg-night-surface border border-paper-border dark:border-night-border flex items-center gap-1.5">
+        <span>↓</span>
+        <span class="text-[10px]">Spoken Phrasing String</span>
+      </span>
+    </div>
+
+    <!-- Step 4: TTS -->
+    <div class="p-4 rounded-xl border border-paper-border dark:border-night-border bg-paper dark:bg-night-surface">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-2">
+        <div class="flex items-center gap-3">
+          <span class="w-7 h-7 rounded-lg bg-hanko/10 dark:bg-hanko-light/10 text-hanko dark:text-hanko-light font-mono font-bold flex items-center justify-center text-xs shrink-0">04</span>
+          <div>
+            <h4 class="text-sm font-bold text-sumi dark:text-nightText font-mono">Neural Speech Synthesis Engine</h4>
+            <p class="text-xs text-sumi-muted dark:text-nightText-muted">Piper TTS ONNX Runtime + In-Memory Voice Cache</p>
+          </div>
+        </div>
+        <span class="text-[11px] font-mono px-2.5 py-1 rounded-full bg-paper-muted dark:bg-night-highlight text-sumi-soft dark:text-nightText-soft border border-paper-border dark:border-night-border">Piper ONNX (&lt;250ms)</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 pt-3 border-t border-paper-border/40 dark:border-night-border/40 text-[11px] font-mono text-sumi-muted dark:text-nightText-muted">
+        <div class="flex items-center gap-1.5"><span>•</span> Arabic Voice: <code class="text-[10px] px-1 bg-paper-muted dark:bg-night-surface rounded">ar_JO-kareem-medium</code></div>
+        <div class="flex items-center gap-1.5"><span>•</span> English Voice: <code class="text-[10px] px-1 bg-paper-muted dark:bg-night-surface rounded">en_US-lessac-medium</code></div>
+      </div>
+    </div>
+
+    <!-- Arrow down -->
+    <div class="flex justify-center text-sumi-muted dark:text-nightText-muted text-xs font-mono">
+      <span class="px-3 py-0.5 rounded-full bg-paper-muted/80 dark:bg-night-surface border border-paper-border dark:border-night-border flex items-center gap-1.5">
+        <span>↓</span>
+        <span class="text-[10px]">WAV Audio Stream</span>
+      </span>
+    </div>
+
+    <!-- Step 5: Output -->
+    <div class="p-4 rounded-xl border-2 border-detective-teal/50 bg-detective-teal/5 dark:bg-detective-teal/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="w-7 h-7 rounded-lg bg-detective-teal text-paper font-mono font-bold flex items-center justify-center text-xs shrink-0">05</span>
+        <div>
+          <h4 class="text-sm font-bold text-sumi dark:text-nightText font-mono">Auditory Readout & Accessible Display</h4>
+          <p class="text-xs text-sumi-muted dark:text-nightText-muted">Instant audio playback + 26px high-contrast typography</p>
+        </div>
+      </div>
+      <span class="text-[11px] font-mono font-bold text-detective-teal uppercase">Real-Time Output</span>
+    </div>
+  </div>
+</div>
+
+---
+
+## 3. Intelligent Image Preprocessing & OCR
+
+Raw images captured by hand from smartphone cameras or webcams often suffer from uneven shadows, low lighting, improper orientation, and low resolution. If passed directly to an OCR engine, character error rates (CER) on complex scripts like Arabic rise significantly due to cursive ligatures and diacritics.
+
+To solve this, Basira implements a deterministic pre-OCR transformation pipeline using Pillow:
+
+```python
+# src/services/ocr.py
+from PIL import Image, ImageOps
+import pytesseract
+
+def prepare_image(img: Image.Image) -> Image.Image:
+    # 1. Respect smartphone EXIF orientation flags
+    img = ImageOps.exif_transpose(img)
+    
+    # 2. Eliminate color noise and reduce channels to 8-bit luminance
+    img = ImageOps.grayscale(img)
+    
+    # 3. Maximize contrast across dark text and faint paper backgrounds
+    img = ImageOps.autocontrast(img)
+    
+    # 4. Upscale small documents to ensure character height exceeds 30px
+    if img.width < 1500:
+        scale = 1500 / img.width
+        img = img.resize((int(img.width * scale), int(img.height * scale)))
+        
+    return img
+
+def read_text(img: Image.Image, ocr_lang: str) -> str:
+    img = prepare_image(img)
+    text = pytesseract.image_to_string(img, lang=ocr_lang)
+    return text.strip()
+```
+
+### Key Engineering Decisions:
+1. **EXIF Transposition (`exif_transpose`)**: Mobile browsers frequently upload rotated images based on sensor metadata. Standardizing orientation prevents inverted text OCR failure.
+2. **Autocontrast Normalization**: Maximizes the dynamic histogram range, separating faded ink and receipt thermal prints from gray paper background.
+3. **Width Clamping**: Tesseract's LSTM neural network performs best when character line heights fall within a specific pixel band. Upscaling images under 1500px ensures small fonts are cleanly segmented.
+
+---
+
+## 4. Local Cognitive Reasoning & Prompt Engineering
+
+Reading raw OCR text verbatim is often overwhelming for a visually impaired user. An invoice contains dozens of irrelevant line items, tax IDs, and barcode artifacts. The user primarily needs to know:
+- **What is this document?**
+- **How much do I owe, or what dosage do I take?**
+- **What is the deadline or appointment time?**
+- **What action is required from me?**
+
+Basira uses **Ollama** running **Qwen 2.5 (3B)** locally. Qwen 2.5 was chosen because of its exceptional multilingual reasoning and strong native Arabic language comprehension, even at compact quantized sizes.
+
+### Anti-Hallucination & TTS-Safe System Prompt
+
+Designing prompts for text-to-speech output requires strict formatting constraints. If the LLM generates markdown formatting like `**Amount:** $50` or bullet lists (`- item`), the speech synthesis engine will literally vocalize *"asterisk asterisk Amount asterisk asterisk"*, ruining the auditory experience.
+
+Here is the exact prompt engineering deployed in `src/config.py`:
+
+```python
+# src/config.py
+SYSTEM_PROMPT = """You are Basira, a kind and patient assistant who helps a person
+with low vision understand paper documents.
+
+Rules:
+- Reply in {language_name}.
+- Use short sentences and very simple words, as if talking to a loved one.
+- Start with ONE sentence: what kind of document this is.
+- Then clearly list: amounts of money, dates and deadlines, names, and
+  anything the person must DO.
+- The text came from OCR and may contain mistakes. If a number or word looks
+  unclear, say so honestly. NEVER invent information.
+- For medicine or legal papers, add: "Please confirm with a doctor/pharmacist
+  or a trusted person."
+- Do not use markdown symbols, bullet characters, or emojis. Your answer will
+  be read aloud, so write natural spoken sentences."""
+```
+
+### LLM Service Execution
+
+```python
+# src/services/llm.py
+import ollama
+from src.config import MODEL, SYSTEM_PROMPT
+
+def explain(text: str, language_name: str) -> str:
+    response = ollama.chat(
+        model=MODEL,
+        messages=[
+            {
+                "role": "system",
+                "content": SYSTEM_PROMPT.format(language_name=language_name),
+            },
+            {
+                "role": "user",
+                "content": f"Here is the text from the document:\n\n{text}",
+            },
+        ],
+        options={"temperature": 0.2},
+    )
+    return response["message"]["content"].strip()
+```
+
+Setting `temperature: 0.2` prevents creative hallucination, forcing the model to strictly summarize verbatim factual numbers and dates present in the extracted text.
+
+---
+
+## 5. Offline Neural Speech Synthesis (Piper TTS)
+
+Many local TTS solutions (such as Coqui XTTS or Bark) require heavy GPU VRAM and take 5 to 15 seconds to synthesize a paragraph. On the other end of the spectrum, standard OS text-to-speech tools (e.g., SAPI5 or eSpeak) sound robotic and lack natural Arabic intonation.
+
+Basira integrates **Piper**, an ultra-fast, local neural text-to-speech engine based on the VITS architecture running on **ONNX Runtime**.
+
+```python
+# src/services/tts.py
+import tempfile
+import wave
+from pathlib import Path
+from piper.voice import PiperVoice
+from src.config import VOICES_DIR
+
+VOICE_CACHE: dict[str, PiperVoice] = {}
+
+def get_voice(voice_name: str) -> PiperVoice:
+    if voice_name not in VOICE_CACHE:
+        model_path = VOICES_DIR / f"{voice_name}.onnx"
+        if not model_path.exists():
+            raise FileNotFoundError(f"Voice not found: {model_path}")
+        VOICE_CACHE[voice_name] = PiperVoice.load(str(model_path))
+    return VOICE_CACHE[voice_name]
+
+def speak(text: str, voice_name: str) -> str:
+    voice = get_voice(voice_name)
+    out_file = Path(tempfile.gettempdir()) / "basira_output.wav"
+    with wave.open(str(out_file), "wb") as wav_file:
+        voice.synthesize_wav(text, wav_file)
+    return str(out_file)
+```
+
+### Speech Synthesis Performance:
+- **In-Memory Caching (`VOICE_CACHE`)**: Initial ONNX model loading occurs once; subsequent voice synthesis requests run in **under 250ms** on an average CPU.
+- **Natural Arabic Diacritization & Flow**: Uses the `ar_JO-kareem-medium` model, producing human-quality Arabic phonetics without robotic stuttering.
+- **English Support**: Uses `en_US-lessac-medium` for crystal-clear English technical and medical pronunciation.
+
+---
+
+## 6. The Unified Processor Pipeline
+
+The core orchestration module ties all components together with defensive error handling:
+
+```python
+# src/core/processor.py
+from PIL import Image
+from src.config import LANGUAGES
+from src.services.ocr import read_text
+from src.services.llm import explain
+from src.services.tts import speak
+
+def process(image: Image.Image, language_choice: str, read_mode: str):
+    if image is None:
+        return "Please add a photo first.", "", None
+
+    settings = LANGUAGES[language_choice]
+    language_name = "Arabic" if "Arabic" in language_choice or language_choice == "العربية" else "English"
+    if language_choice == "Arabic + English":
+        language_name = "Arabic"
+
+    # Step 1: Optical Character Recognition
+    try:
+        raw_text = read_text(image, settings["ocr"])
+    except Exception as e:
+        return f"OCR problem: {e}", "", None
+
+    if len(raw_text) < 5:
+        return "I couldn't read much text. Try a clearer, brighter, straighter photo.", raw_text, None
+
+    # Step 2: Cognitive LLM Explanation
+    explanation = ""
+    try:
+        explanation = explain(raw_text, language_name)
+    except Exception as e:
+        explanation = f"(AI explanation unavailable: {e})"
+
+    # Determine speech target based on user preference
+    if "النص الأصلي" in read_mode:
+        text_to_speak = raw_text
+    else:
+        text_to_speak = explanation if not explanation.startswith("(AI explanation unavailable") else raw_text
+
+    # Step 3: Neural Voice Synthesis
+    try:
+        audio_path = speak(text_to_speak, settings["voice"])
+    except Exception as e:
+        return explanation + f"\n\n(Voice problem: {e})", raw_text, None
+
+    return explanation, raw_text, audio_path
+```
+
+---
+
+## 7. Accessible UI & Local Wi-Fi Bridging
+
+Accessibility is central to Basira's frontend design. Using Gradio with tailored CSS overrides, the UI ensures high-contrast readability and large interactive tap targets:
+
+```python
+# src/ui/app_ui.py
+CUSTOM_CSS = """
+* { font-size: 22px !important; }
+h1 { font-size: 48px !important; }
+textarea, .prose { font-size: 26px !important; line-height: 1.6 !important; }
+button { min-height: 70px; font-weight: bold; }
+"""
+```
+
+### Wireless Phone-to-PC Bridge
+Instead of requiring a dedicated mobile app build, Basira runs as a lightweight local web server on port `7860`.
+
+When connected to the same household Wi-Fi:
+1. The user opens `http://<computer-ip>:7860` on their smartphone browser.
+2. Tapping the image box opens the smartphone camera directly.
+3. The image is processed on the host PC's CPU/GPU, and the generated audio stream streams back instantly to the phone speaker.
+
+---
+
+## 8. Hardware Footprint & Benchmarks
+
+All tests below were executed on an entry-level laptop with an **AMD Ryzen 5 / 16 GB RAM** with **no dedicated GPU**:
+
+| Pipeline Stage | Technology | Resource Utilization | Average Latency |
+|---|---|---|---|
+| **Image Preprocessing** | Pillow (PIL) | ~15 MB RAM | **35 ms** |
+| **Multilingual OCR** | Tesseract 5.3 | ~45 MB RAM | **420 ms** |
+| **Document Reasoning** | Ollama (`qwen2.5:3b` Q4_K_M) | ~2.1 GB RAM | **1.8 s** |
+| **Speech Synthesis** | Piper ONNX (`ar_JO-kareem`) | ~80 MB RAM | **210 ms** |
+| **Total Pipeline** | **End-to-End** | **< 2.4 GB RAM** | **~2.5 seconds** |
+
+---
+
+## 9. Future Roadmap & Research Directions
+
+Basira serves as a foundational open-source architecture for offline assistive AI. Moving forward, several high-impact features are planned:
+
+1. **Local Vision-Language Models (VLM)**: Evaluating lightweight edge VLMs (such as *Moondream 2* or *Qwen2-VL 2B*) to replace the standalone OCR step, enabling better chart, table, and multi-column receipt comprehension.
+2. **Hands-Free Voice Activation**: Integrating local **Whisper.cpp** to enable full voice conversational control without needing to tap screen buttons.
+3. **Embedded Hardware Edition**: Packaging the entire stack into a dedicated Raspberry Pi 5 / Orange Pi setup with a physical camera button and built-in speaker.
+
+---
+
+## Summary & Resources
+
+By combining local neural text-to-speech, edge LLM reasoning, and optimized computer vision pipelines, **Basira** demonstrates that accessibility tools do not require expensive cloud subscriptions or data-mining trade-offs. You can run a fully private, voice-guided document reader on consumer hardware with complete privacy and zero monthly fees.
+
+The project source code, configuration files, and setup instructions are open and freely available for developers to adapt, extend, and deploy:
+
+- **GitHub Repository:** [https://github.com/aelaraby6/Basira](https://github.com/aelaraby6/Basira)
+- **License:** MIT License (Free for personal and commercial usage)
+

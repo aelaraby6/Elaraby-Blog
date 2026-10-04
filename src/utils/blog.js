@@ -60,7 +60,7 @@ export function getAllCategories(posts) {
 
   const categoryDescriptions = {
     'Backend': 'Server architecture, caching patterns, database internals, and high-performance backend systems.',
-    'AI': 'Practical machine learning notes, intelligent log heuristics, and AI security experiments.',
+    'AI': 'Offline neural models, computer vision OCR, local LLM orchestration, edge speech synthesis, and assistive intelligence.',
     'Cybersecurity': 'Access control models, authentication protocols, defensive engineering, and incident investigations.',
     'Networking': 'TCP/IP diagnostics, DNS forensics, socket programming, and protocol analysis.',
     'Software Engineering': 'Architectural principles, refactoring strategies, debugging philosophies, and craft.',
