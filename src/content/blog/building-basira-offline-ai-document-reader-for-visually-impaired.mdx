@@ -50,29 +50,15 @@ To address this challenge, I designed and developed **Basira (بصيرة)**: an 
 
 Before diving into the underlying software architecture, here is a full demonstration of Basira processing a physical document in real time:
 
-<div class="my-8 rounded-2xl overflow-hidden border border-paper-border dark:border-night-border bg-paper-elevated dark:bg-night-card shadow-md p-2 sm:p-4">
-  <div class="flex items-center justify-between px-2 pb-3 mb-2 border-b border-paper-border/60 dark:border-night-border/60 text-xs font-mono text-sumi-muted dark:text-nightText-muted">
-    <div class="flex items-center gap-2">
-      <span class="w-2.5 h-2.5 rounded-full bg-detective-teal animate-pulse"></span>
-      <span class="font-bold text-sumi dark:text-nightText">LIVE TELEMETRY // BASIRA WORKFLOW DEMO</span>
-    </div>
-    <span class="text-[11px] uppercase tracking-wider">Format: MP4 (1080p)</span>
-  </div>
+import VideoPlayer from '../../components/VideoPlayer.astro';
 
-  <video
-    controls
-    preload="metadata"
-    class="w-full rounded-xl border border-paper-border/80 dark:border-night-border/80 shadow-xs bg-black aspect-video object-cover"
-    poster="/images/basira-preview.jpg"
-  >
-    <source src="/videos/basyra.mp4" type="video/mp4" />
-    Your browser does not support playing embedded HTML5 videos.
-  </video>
-
-  <p class="mt-3 text-xs font-mono text-center text-sumi-muted dark:text-nightText-muted">
-    Demonstration: Capturing paper document, preprocessing, dual-engine OCR, Qwen 2.5 distillation, and Arabic Piper neural audio readout.
-  </p>
-</div>
+<VideoPlayer
+  src="videos/basyra.mp4"
+  poster="images/basira-preview.jpg"
+  title="LIVE TELEMETRY // BASIRA WORKFLOW DEMO"
+  format="MP4 (1080p)"
+  caption="Demonstration: Capturing paper document, preprocessing, dual-engine OCR, Qwen 2.5 distillation, and Arabic Piper neural audio readout."
+/>
 
 ---
 

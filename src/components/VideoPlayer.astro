@@ -1,0 +1,40 @@
+---
+import { resolvePath } from '../utils/paths.js';
+
+const {
+  src,
+  poster,
+  title = 'LIVE TELEMETRY // VIDEO DEMO',
+  format = 'MP4 (1080p)',
+  caption,
+} = Astro.props;
+
+const resolvedSrc = resolvePath(src);
+const resolvedPoster = poster ? resolvePath(poster) : undefined;
+---
+
+<div class="my-8 rounded-2xl overflow-hidden border border-paper-border dark:border-night-border bg-paper-elevated dark:bg-night-card shadow-md p-2 sm:p-4">
+  <div class="flex items-center justify-between px-2 pb-3 mb-2 border-b border-paper-border/60 dark:border-night-border/60 text-xs font-mono text-sumi-muted dark:text-nightText-muted">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-detective-teal animate-pulse"></span>
+      <span class="font-bold text-sumi dark:text-nightText uppercase tracking-wider">{title}</span>
+    </div>
+    <span class="text-[11px] uppercase tracking-wider">Format: {format}</span>
+  </div>
+
+  <video
+    controls
+    preload="metadata"
+    class="w-full rounded-xl border border-paper-border/80 dark:border-night-border/80 shadow-xs bg-black aspect-video object-cover"
+    poster={resolvedPoster}
+  >
+    <source src={resolvedSrc} type="video/mp4" />
+    Your browser does not support playing embedded HTML5 videos.
+  </video>
+
+  {caption && (
+    <p class="mt-3 text-xs font-mono text-center text-sumi-muted dark:text-nightText-muted">
+      {caption}
+    </p>
+  )}
+</div>

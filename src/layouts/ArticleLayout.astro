@@ -30,6 +30,7 @@ const articlesUrl = resolvePath('articles');
   title={`${title} (${caseNumber})`}
   description={description}
   articleDate={pubDate.toISOString()}
+  image={coverImage ? resolvePath(coverImage) : undefined}
 >
   <!-- Back navigation breadcrumb -->
   <div class="mb-6 flex items-center justify-between text-xs font-mono text-sumi-muted dark:text-nightText-muted">
@@ -106,7 +107,7 @@ const articlesUrl = resolvePath('articles');
     <!-- Optional Cover Image -->
     {coverImage && (
       <div class="mb-10 rounded-xl overflow-hidden border border-paper-border dark:border-night-border">
-        <img src={coverImage} alt={title} class="w-full h-auto object-cover max-h-[420px]" />
+        <img src={resolvePath(coverImage)} alt={title} class="w-full h-auto object-cover max-h-[420px]" />
       </div>
     )}
 
